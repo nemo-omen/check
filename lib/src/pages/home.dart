@@ -4,19 +4,26 @@ import 'package:flutter/material.dart';
 // * Pages
 // * |—> Home
 // * |———> Check Stream
-// *        |___ListView()
-// *            |___ Sorting (default: newest first | option: oldest | option: almost time | option: late)
-// *               |___ if(DateTime.now - lastCheckedDateTime == 24hrs) {showNagButton();}
+// * |       |___ListView()
+// * |           |___ Sorting (default: newest first | option: oldest | option: almost time | option: late)
+// * |              |___ if(DateTime.now - lastCheckedDateTime == 24hrs) {showNagButton();}
 // * |—> Friends
-// *      |___ListView
-// *           |___ Card()
-// *              |  |___ onClick((friends[index]){showFriend(friend[index])})
-// *              |___ Card()
-// *              |      |___ CircularAvatar()
-// *              |      |___ Container()
-// *              |      |___ ListView([friend.name, friend.homeLocation, friend.lastCheckDateTime, friend.currentCheckLevel])
-// *              |___ ListView([friend.checks])
+// * |     |___ListView
+// * |          |___ Card()
+// * |             |  |___ onClick((friends[index]){showFriend(friend[index])})
+// * |             |___ Card()
+// * |             |      |___ CircularAvatar()
+// * |             |      |___ Container()
+// * |             |      |___ ListView([friend.name, friend.homeLocation, friend.lastCheckDateTime, friend.currentCheckLevel])
+// * |             |___ ListView([friend.checks])
+// * |
 // * |—> Messages
+// * |
+// * |
+// * |—> Notifications
+// * |
+// * |
+// * |—> Search
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
   final String title;
@@ -34,7 +41,43 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontFamily: 'Raleway',
+            fontWeight: FontWeight.w300,
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.group),
+            tooltip: 'Friends',
+            onPressed: () {
+              print('Friends pressed');
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.notifications),
+            tooltip: 'Friends',
+            onPressed: () {
+              print('Friends pressed.');
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.message),
+            tooltip: 'Messages',
+            onPressed: () {
+              print('Pressed messages.');
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {
+              print('Pressed search');
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -52,21 +95,18 @@ class _HomePageState extends State<HomePage> {
         elevation: 8.0,
         child: Container(height: 40.0),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
           onPressed: () {
             print('Yum!');
           },
+          backgroundColor: Theme.of(context).accentColor,
           tooltip: 'Check In!',
-          label: Text(
-            'Check In!',
-            style: TextStyle(color: Colors.white),
-          ),
-          icon: Icon(
+          child: Icon(
             Icons.check,
             color: Colors.white,
-            size: 30.0,
+            // size: 30.0,
           )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

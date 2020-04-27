@@ -9,6 +9,8 @@ class App extends StatelessWidget {
       title: 'Check',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        accentColor: Colors.lightBlue,
+        fontFamily: 'IBM Plex Mono',
       ),
       home: HomePage(title: 'Check'),
     );
