@@ -47,6 +47,39 @@ class _HomePageState extends State<HomePage> {
 // ! Build method for main widget beneath this line
   @override
   Widget build(BuildContext context) {
+    // TODO: break AppBar off into separate file
+    final dummyChecks = [
+      {
+        'friend': 'Joe Winklesmith',
+        'status': 'Happy',
+        'checkTime': 'Today, 3:24pm',
+      },
+      {
+        'friend': 'Nancy Cartwheel',
+        'status': 'Anxious',
+        'checkTime': 'Today, 2:30pm',
+      },
+      {
+        'friend': 'Camilo Cienfuegos',
+        'status': 'Sick',
+        'checkTime': 'Today, 2:00pm',
+      },
+      {
+        'friend': 'Andre Tresmil',
+        'status': 'Depressed',
+        'checkTime': 'Today, 1:00pm',
+      },
+      {
+        'friend': 'Bill Billers',
+        'status': 'Meh',
+        'checkTime': 'Yesterday, 1:20pm',
+      },
+      {
+        'friend': 'Wanda Maximov',
+        'status': 'Content',
+        'checkTime': 'Yesterday, 12:00pm',
+      },
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -61,55 +94,66 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              FlutterIcons.people_sli,
+              FlutterIcons.team_ant,
               color: Theme.of(context).primaryColor,
             ),
             tooltip: 'Friends',
+            iconSize: 20.0,
             onPressed: () {
               print('Pressed Friends');
             },
           ),
           IconButton(
             icon: Icon(
-              FlutterIcons.bulb_sli,
+              FlutterIcons.mail_ant,
               color: Theme.of(context).primaryColor,
             ),
-            tooltip: 'Notifications',
+            tooltip: 'Messages',
+            iconSize: 20.0,
             onPressed: () {
-              print('Pressed Notifications.');
+              print('Pressed Messages.');
             },
           ),
           IconButton(
             icon: Icon(
-              FlutterIcons.envelope_sli,
+              FlutterIcons.search1_ant,
               color: Theme.of(context).primaryColor,
             ),
-            tooltip: 'Messages',
+            tooltip: 'Search',
+            iconSize: 20.0,
             onPressed: () {
               print('Pressed messages.');
             },
           ),
           IconButton(
             icon: Icon(
-              FlutterIcons.magnifier_sli,
+              FlutterIcons.menufold_ant,
               color: Theme.of(context).primaryColor,
             ),
-            tooltip: 'Search',
+            tooltip: 'Settings',
+            iconSize: 20.0,
             onPressed: () {
-              print('Pressed search');
+              print('Pressed Menu');
             },
           ),
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Very empty here...',
-            ),
-          ],
-        ),
+        child: ListView.builder(
+            itemCount: dummyChecks.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                isThreeLine: true,
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[300],
+                  radius: 15.0,
+                ),
+                title: Text(dummyChecks[index]['friend']),
+                subtitle: Text(
+                  'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                ),
+              );
+            }),
       ),
       bottomNavigationBar: BottomAppBar(
         // shape: CircularNotchedRectangle(),
