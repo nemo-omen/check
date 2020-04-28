@@ -142,15 +142,20 @@ class _HomePageState extends State<HomePage> {
         child: ListView.builder(
             itemCount: dummyChecks.length,
             itemBuilder: (context, index) {
-              return ListTile(
-                isThreeLine: true,
-                leading: CircleAvatar(
-                  backgroundColor: Colors.grey[300],
-                  radius: 15.0,
-                ),
-                title: Text(dummyChecks[index]['friend']),
-                subtitle: Text(
-                  'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+              return GestureDetector(
+                onTap: () {
+                  print(dummyChecks[index]['friend']);
+                },
+                child: ListTile(
+                  isThreeLine: true,
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey[300],
+                    radius: 15.0,
+                  ),
+                  title: Text(dummyChecks[index]['friend']),
+                  subtitle: Text(
+                    'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                  ),
                 ),
               );
             }),
