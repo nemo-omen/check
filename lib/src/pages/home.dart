@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:line_awesome_icons/line_awesome_icons.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-// TODO: switch to feather icons or Ant icons -- Simple Outline Icons
-// ! https://github.com/flutter-studio/flutter-icons
+import 'package:check/src/widgets/user_avatar.dart';
 
 // todo:
 // * Pages
@@ -53,33 +50,44 @@ class _HomePageState extends State<HomePage> {
         'friend': 'Joe Winklesmith',
         'status': 'Happy',
         'checkTime': 'Today, 3:24pm',
+        'profileImage': null,
       },
       {
         'friend': 'Nancy Cartwheel',
         'status': 'Anxious',
         'checkTime': 'Today, 2:30pm',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/nancy_cartwheel@adorable.io.png',
       },
       {
         'friend': 'Camilo Cienfuegos',
         'status': 'Sick',
         'checkTime': 'Today, 2:00pm',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/camilo_cienfuegos@adorable.io.png',
       },
       {
         'friend': 'Andre Tresmil',
         'status': 'Depressed',
         'checkTime': 'Today, 1:00pm',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/andre_tresmil@adorable.io.png',
       },
       {
         'friend': 'Bill Billers',
         'status': 'Meh',
         'checkTime': 'Yesterday, 1:20pm',
+        'profileImage': null,
       },
       {
         'friend': 'Wanda Maximov',
         'status': 'Content',
         'checkTime': 'Yesterday, 12:00pm',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/wanda_maximov@adorable.io.png',
       },
     ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -148,9 +156,9 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: ListTile(
                   isThreeLine: true,
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.grey[300],
-                    radius: 15.0,
+                  leading: UserAvatar(
+                    imageURL: dummyChecks[index]['profileImage'],
+                    userName: dummyChecks[index]['friend'],
                   ),
                   title: Text(dummyChecks[index]['friend']),
                   subtitle: Text(
