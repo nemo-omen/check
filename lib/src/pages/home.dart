@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:line_awesome_icons/line_awesome_icons.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+
+// TODO: switch to feather icons or Ant icons -- Simple Outline Icons
+// ! https://github.com/flutter-studio/flutter-icons
 
 // todo:
 // * Pages
@@ -24,6 +30,8 @@ import 'package:flutter/material.dart';
 // * |
 // * |
 // * |—> Search
+// * |
+// * |—> Profile
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
   final String title;
@@ -41,37 +49,51 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           widget.title,
           style: TextStyle(
             fontFamily: 'Raleway',
             fontWeight: FontWeight.w300,
+            color: Theme.of(context).primaryColor,
           ),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.group),
+            icon: Icon(
+              FlutterIcons.people_sli,
+              color: Theme.of(context).primaryColor,
+            ),
             tooltip: 'Friends',
             onPressed: () {
-              print('Friends pressed');
+              print('Pressed Friends');
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications),
-            tooltip: 'Friends',
+            icon: Icon(
+              FlutterIcons.bulb_sli,
+              color: Theme.of(context).primaryColor,
+            ),
+            tooltip: 'Notifications',
             onPressed: () {
-              print('Friends pressed.');
+              print('Pressed Notifications.');
             },
           ),
           IconButton(
-            icon: Icon(Icons.message),
+            icon: Icon(
+              FlutterIcons.envelope_sli,
+              color: Theme.of(context).primaryColor,
+            ),
             tooltip: 'Messages',
             onPressed: () {
               print('Pressed messages.');
             },
           ),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(
+              FlutterIcons.magnifier_sli,
+              color: Theme.of(context).primaryColor,
+            ),
             tooltip: 'Search',
             onPressed: () {
               print('Pressed search');
@@ -99,14 +121,19 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             print('Yum!');
           },
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: Colors.white,
           tooltip: 'Check In!',
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            side: BorderSide(color: Colors.blue[100], width: 1.0),
+          ),
+          mini: true,
           child: Icon(
             Icons.check,
-            color: Colors.white,
+            color: Theme.of(context).primaryColor,
             // size: 30.0,
           )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
