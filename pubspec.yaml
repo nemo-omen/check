@@ -57,7 +57,7 @@ flutter:
         - asset: lib/assets/fonts/IBMPlexSans-Medium.ttf
         - asset: lib/assets/fonts/IBMPlexSans-MediumItalic.ttf
           style: italic
-        - asset: lib/assets/fonts/IBMPlexSans-light.ttf
+        - asset: lib/assets/fonts/IBMPlexSans-Light.ttf
           weight: 200
     - family: Raleway
       fonts:
