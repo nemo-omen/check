@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: <Widget>[
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Container(
                                 margin:
@@ -208,36 +208,10 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(
-                                          FlutterIcons.message_outline_mco),
-                                      onPressed: () {},
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(FlutterIcons.heart_outline_mco),
-                                      onPressed: () {},
-                                    ),
-                                    IconButton(
-                                      icon:
-                                          Icon(FlutterIcons.alert_outline_mco),
-                                      onPressed: () {},
-                                    ),
-                                  ],
-                                ),
-                              ),
                             ],
                           ),
                           Divider(
-                            color: Theme.of(context).accentColor,
                             height: 1.0,
-                            thickness: 0.5,
                             indent: 10.0,
                             endIndent: 10.0,
                           ),
@@ -255,6 +229,48 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ],
+                          ),
+                          Divider(
+                            indent: 10.0,
+                            endIndent: 10.0,
+                            height: 1.0,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(0.0),
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                  iconSize: 15.0,
+                                  padding: EdgeInsets.all(0.0),
+                                  icon: Icon(
+                                    FlutterIcons.message_outline_mco,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  iconSize: 15.0,
+                                  padding: EdgeInsets.all(0.0),
+                                  icon: Icon(
+                                    FlutterIcons.heart_outline_mco,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  iconSize: 15.0,
+                                  icon: Icon(
+                                    FlutterIcons.alert_outline_mco,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
