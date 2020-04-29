@@ -82,12 +82,16 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Joe Winklesmith',
         'status': 'Happy',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Today, 3:24pm',
         'profileImage': null,
       },
       {
         'friend': 'Nancy Cartwheel',
         'status': 'Anxious',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Today, 2:30pm',
         'profileImage':
             'https://api.adorable.io/avatars/285/nancy_cartwheel@adorable.io.png',
@@ -95,6 +99,8 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Camilo Cienfuegos',
         'status': 'Sick',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Today, 2:00pm',
         'profileImage':
             'https://api.adorable.io/avatars/285/camilo_cienfuegos@adorable.io.png',
@@ -102,6 +108,8 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Andre Tresmil',
         'status': 'Depressed',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Today, 1:00pm',
         'profileImage':
             'https://api.adorable.io/avatars/285/andre_tresmil@adorable.io.png',
@@ -109,12 +117,16 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Bill Billers',
         'status': 'Meh',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Yesterday, 1:20pm',
         'profileImage': null,
       },
       {
         'friend': 'Wanda Maximov',
         'status': 'Content',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Yesterday, 12:00pm',
         'profileImage':
             'https://api.adorable.io/avatars/285/wanda_maximov@adorable.io.png',
@@ -122,6 +134,8 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Mike Sernandez',
         'status': 'Okay',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Yesterday, 11:00am',
         'profileImage':
             'https://api.adorable.io/avatars/285/mike_sernandez@adorable.io.png',
@@ -129,6 +143,8 @@ class _HomePageState extends State<HomePage> {
       {
         'friend': 'Bobson Dugnutt',
         'status': 'Tired',
+        'statusMessage':
+            'This will be a space for whatever the user wants to post along with their basic status.',
         'checkTime': 'Yesterday, 10:00am',
         'profileImage':
             'https://api.adorable.io/avatars/285/bobson_dugnutt@adorable.io.png',
@@ -152,46 +168,93 @@ class _HomePageState extends State<HomePage> {
                       elevation: 3.0,
                       margin:
                           EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      child: Column(
                         children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 20.0, 5.0),
-                            child: UserAvatar(
-                              imageURL: dummyChecks[index]['profileImage'],
-                              userName: dummyChecks[index]['friend'],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                                child: UserAvatar(
+                                  imageURL: dummyChecks[index]['profileImage'],
+                                  userName: dummyChecks[index]['friend'],
+                                ),
+                              ),
+                              Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      dummyChecks[index]['friend'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14.0,
+                                        letterSpacing: 1.2,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                                      style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                        fontSize: 12.0,
+                                        height: 1.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: Icon(
+                                          FlutterIcons.message_outline_mco),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon:
+                                          Icon(FlutterIcons.heart_outline_mco),
+                                      onPressed: () {},
+                                    ),
+                                    IconButton(
+                                      icon:
+                                          Icon(FlutterIcons.alert_outline_mco),
+                                      onPressed: () {},
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  dummyChecks[index]['friend'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.0,
-                                    letterSpacing: 1.2,
-                                    color: Theme.of(context).primaryColor,
+                          Divider(
+                            color: Theme.of(context).accentColor,
+                            height: 1.0,
+                            thickness: 0.5,
+                            indent: 10.0,
+                            endIndent: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Flexible(
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(
+                                      10.0, 10.0, 10.0, 10.0),
+                                  child: Text(
+                                    dummyChecks[index]['statusMessage'],
                                   ),
                                 ),
-                                Divider(
-                                  color: Theme.of(context).accentColor,
-                                  height: 1.0,
-                                  thickness: 1.0,
-                                ),
-                                Text(
-                                  'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
-                                  style: TextStyle(
-                                    color: Theme.of(context).accentColor,
-                                    fontSize: 12.0,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
