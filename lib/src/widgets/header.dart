@@ -10,7 +10,7 @@ header(context,
     title: Text(
       isAppTitle ? 'Check' : titleText,
       style: TextStyle(
-        fontFamily: 'Raleway',
+        fontFamily: 'IBM Plex Sans',
         fontSize: 30.0,
         fontWeight: FontWeight.w200,
         color: Theme.of(context).primaryColor,

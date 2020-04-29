@@ -149,29 +149,78 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       print(dummyChecks[index]['friend']);
                     },
-                    child: ListTile(
-                      isThreeLine: true,
-                      leading: UserAvatar(
-                        imageURL: dummyChecks[index]['profileImage'],
-                        userName: dummyChecks[index]['friend'],
-                      ),
-                      title: Text(dummyChecks[index]['friend']),
-                      subtitle: Text(
-                        'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                    child: Card(
+                      elevation: 10.0,
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.fromLTRB(5.0, 5.0, 20.0, 5.0),
+                            child: UserAvatar(
+                              imageURL: dummyChecks[index]['profileImage'],
+                              userName: dummyChecks[index]['friend'],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  dummyChecks[index]['friend'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.0,
+                                    letterSpacing: 1.2,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                Divider(
+                                  color: Theme.of(context).accentColor,
+                                  height: 1.0,
+                                  thickness: 1.0,
+                                ),
+                                Text(
+                                  'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: 12.0,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    // child: ListTile(
+                    //   isThreeLine: true,
+                    //   leading: UserAvatar(
+                    //     imageURL: dummyChecks[index]['profileImage'],
+                    //     userName: dummyChecks[index]['friend'],
+                    //   ),
+                    //   title: Text(dummyChecks[index]['friend']),
+                    //   subtitle: Text(
+                    //     'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                    //   ),
+                    // ),
                   );
                 }),
           ),
           FriendsPage(),
           Messages(),
-          Search(),
+          // Search(),
           Settings(),
         ],
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         // shape: CircularNotchedRectangle(),
         // color: Colors.white,
         currentIndex: pageIndex,
@@ -181,31 +230,40 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              FlutterIcons.team_ant,
+              FlutterIcons.home_ant,
               size: 20.0,
             ),
-            title: Text('Friends'),
+            title: Text(''),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              FlutterIcons.mail_ant,
-              size: 20.0,
+            icon: Padding(
+              padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0),
+              child: Icon(
+                FlutterIcons.team_ant,
+                size: 20.0,
+              ),
             ),
-            title: Text('Messages'),
+            title: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 30.0, 0), child: Text('')),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              FlutterIcons.search1_ant,
-              size: 20.0,
+            icon: Padding(
+              padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+              child: Icon(
+                FlutterIcons.mail_ant,
+                size: 20.0,
+              ),
             ),
-            title: Text('Search'),
+            title: Padding(
+                padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                child: Text('')),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               FlutterIcons.setting_ant,
               size: 20.0,
             ),
-            title: Text('Profile'),
+            title: Text(''),
           ),
         ],
         elevation: 8.0,
@@ -217,6 +275,7 @@ class _HomePageState extends State<HomePage> {
             print('Yum!');
           },
           backgroundColor: Colors.white,
+          elevation: 0.0,
           tooltip: 'Check In!',
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -228,7 +287,7 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).primaryColor,
             // size: 30.0,
           )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
