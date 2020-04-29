@@ -120,6 +120,20 @@ class _HomePageState extends State<HomePage> {
         'profileImage':
             'https://api.adorable.io/avatars/285/wanda_maximov@adorable.io.png',
       },
+      {
+        'friend': 'Mike Sernandez',
+        'status': 'Okay',
+        'checkTime': 'Yesterday, 11:00am',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/mike_sernandez@adorable.io.png',
+      },
+      {
+        'friend': 'Bobson Dugnutt',
+        'status': 'Tired',
+        'checkTime': 'Yesterday, 10:00am',
+        'profileImage':
+            'https://api.adorable.io/avatars/285/bobson_dugnutt@adorable.io.png',
+      },
     ];
 
     return Scaffold(
