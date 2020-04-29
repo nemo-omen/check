@@ -6,7 +6,6 @@ import 'package:check/src/widgets/header.dart';
 // ! Page imports
 import 'package:check/src/pages/friends.dart';
 import 'package:check/src/pages/messages.dart';
-import 'package:check/src/pages/search.dart';
 import 'package:check/src/pages/settings.dart';
 
 // todo:
@@ -150,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                       print(dummyChecks[index]['friend']);
                     },
                     child: Card(
-                      elevation: 10.0,
+                      elevation: 3.0,
                       margin:
                           EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                       child: Row(
@@ -197,17 +196,6 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    // child: ListTile(
-                    //   isThreeLine: true,
-                    //   leading: UserAvatar(
-                    //     imageURL: dummyChecks[index]['profileImage'],
-                    //     userName: dummyChecks[index]['friend'],
-                    //   ),
-                    //   title: Text(dummyChecks[index]['friend']),
-                    //   subtitle: Text(
-                    //     'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
-                    //   ),
-                    // ),
                   );
                 }),
           ),
