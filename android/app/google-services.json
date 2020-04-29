@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "975158964436",
+    "firebase_url": "https://check-440cd.firebaseio.com",
+    "project_id": "check-440cd",
+    "storage_bucket": "check-440cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975158964436:android:8fd2013e6ead5209070b41",
+        "android_client_info": {
+          "package_name": "com.trainingmontage.check"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975158964436-f7ed93517up9qlmu6apl6hoe52ujjnn5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trainingmontage.check",
+            "certificate_hash": "d32869ccb6f086a6afe17cab9dbac563bf5918f2"
+          }
+        },
+        {
+          "client_id": "975158964436-sa5pk7mk8q3bf5ovuo9mte42khlpnqop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9kbyIl9luMrDazrXXZOlUpXC1a5Sb-a8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975158964436-sa5pk7mk8q3bf5ovuo9mte42khlpnqop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
