@@ -157,11 +157,46 @@ class _HomePageState extends State<HomePage> {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: BottomNavigationBar(
         // shape: CircularNotchedRectangle(),
-        color: Colors.white,
+        // color: Colors.white,
+        currentIndex: pageIndex,
+        onTap: onNavTap,
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).accentColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FlutterIcons.team_ant,
+              size: 20.0,
+            ),
+            title: Text('Friends'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FlutterIcons.mail_ant,
+              size: 20.0,
+            ),
+            title: Text('Messages'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FlutterIcons.search1_ant,
+              size: 20.0,
+            ),
+            title: Text('Search'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              FlutterIcons.setting_ant,
+              size: 20.0,
+            ),
+            title: Text('Profile'),
+          ),
+        ],
         elevation: 8.0,
-        child: Container(height: 40.0),
+
+        // child: Container(height: 40.0),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -179,7 +214,7 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).primaryColor,
             // size: 30.0,
           )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 }
