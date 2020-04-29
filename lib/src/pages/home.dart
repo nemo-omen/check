@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-
+// ! Widget imports
 import 'package:check/src/widgets/user_avatar.dart';
+import 'package:check/src/widgets/header.dart';
+// ! Page imports
+import 'package:check/src/pages/friends.dart';
+import 'package:check/src/pages/messages.dart';
+import 'package:check/src/pages/search.dart';
+import 'package:check/src/pages/settings.dart';
 
 // todo:
 // * Pages
@@ -32,14 +38,42 @@ import 'package:check/src/widgets/user_avatar.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
   final String title;
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
 // ! Variables here
-
+  PageController pageController; //declare pageController variable
+  int pageIndex = 0;
 // ! Functions and methods go beneath this line for readibility's sake
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  onPageChanged(int pageIndex) {
+    setState(() {
+      this.pageIndex = pageIndex;
+    });
+  }
+
+// ! Navigation icon tap function here
+  onNavTap(int pageIndex) {
+    pageController.animateToPage(
+      pageIndex,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
 
 // ! Build method for main widget beneath this line
   @override
@@ -89,84 +123,39 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            fontFamily: 'Raleway',
-            fontWeight: FontWeight.w300,
-            color: Theme.of(context).primaryColor,
+      appBar: header(context,
+          isAppTitle: true, titleText: 'Check', removeBackButton: false),
+      body: PageView(
+        children: <Widget>[
+          Center(
+            child: ListView.builder(
+                itemCount: dummyChecks.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      print(dummyChecks[index]['friend']);
+                    },
+                    child: ListTile(
+                      isThreeLine: true,
+                      leading: UserAvatar(
+                        imageURL: dummyChecks[index]['profileImage'],
+                        userName: dummyChecks[index]['friend'],
+                      ),
+                      title: Text(dummyChecks[index]['friend']),
+                      subtitle: Text(
+                        'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                      ),
+                    ),
+                  );
+                }),
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              FlutterIcons.team_ant,
-              color: Theme.of(context).primaryColor,
-            ),
-            tooltip: 'Friends',
-            iconSize: 20.0,
-            onPressed: () {
-              print('Pressed Friends');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              FlutterIcons.mail_ant,
-              color: Theme.of(context).primaryColor,
-            ),
-            tooltip: 'Messages',
-            iconSize: 20.0,
-            onPressed: () {
-              print('Pressed Messages.');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              FlutterIcons.search1_ant,
-              color: Theme.of(context).primaryColor,
-            ),
-            tooltip: 'Search',
-            iconSize: 20.0,
-            onPressed: () {
-              print('Pressed messages.');
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              FlutterIcons.menufold_ant,
-              color: Theme.of(context).primaryColor,
-            ),
-            tooltip: 'Settings',
-            iconSize: 20.0,
-            onPressed: () {
-              print('Pressed Menu');
-            },
-          ),
+          FriendsPage(),
+          Messages(),
+          Search(),
+          Settings(),
         ],
-      ),
-      body: Center(
-        child: ListView.builder(
-            itemCount: dummyChecks.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  print(dummyChecks[index]['friend']);
-                },
-                child: ListTile(
-                  isThreeLine: true,
-                  leading: UserAvatar(
-                    imageURL: dummyChecks[index]['profileImage'],
-                    userName: dummyChecks[index]['friend'],
-                  ),
-                  title: Text(dummyChecks[index]['friend']),
-                  subtitle: Text(
-                    'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
-                  ),
-                ),
-              );
-            }),
+        controller: pageController,
+        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomAppBar(
         // shape: CircularNotchedRectangle(),
@@ -186,7 +175,7 @@ class _HomePageState extends State<HomePage> {
           ),
           mini: true,
           child: Icon(
-            Icons.check,
+            FlutterIcons.check_ant,
             color: Theme.of(context).primaryColor,
             // size: 30.0,
           )),
