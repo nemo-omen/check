@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "975158964436-dkbn6hgj292122ubiqllacqs3nmk3k81.apps.googleusercontent.com",
+          "client_id": "975158964436-f2sekskt0568b0fktne031o85651p7kj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.trainingmontage.check",
-            "certificate_hash": "1718aa743af88cc0c36b3602ebddf39b8132597c"
+            "certificate_hash": "b1176550cb170429de71bca57b8878414fc35d82"
           }
         },
         {
