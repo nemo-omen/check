@@ -6,7 +6,18 @@ header(context,
   return PreferredSize(
     preferredSize: Size.fromHeight(40.0),
     child: AppBar(
-      automaticallyImplyLeading: removeBackButton = true ? false : true,
+      automaticallyImplyLeading: removeBackButton == true ? false : true,
+      leading: removeBackButton == false
+          ? IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                FlutterIcons.back_ant,
+                color: Theme.of(context).primaryColor,
+              ),
+            )
+          : null,
       backgroundColor: Colors.white,
       centerTitle: true,
       shape: RoundedRectangleBorder(

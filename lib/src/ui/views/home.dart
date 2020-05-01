@@ -11,6 +11,8 @@ import 'package:check/src/ui/views/settings.dart';
 // ! Model imports
 import 'package:check/src/models/dummychecks.dart';
 
+import 'check_view.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.isAuth}) : super(key: key);
   final String title;
@@ -47,6 +49,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+// Navigate to one of the listed pages on BottomNavBarItem tap
+// BottomNavBar can be found in IsAuthPage() Scaffold
   onNavTap(int pageIndex) {
     pageController.animateToPage(
       pageIndex,
@@ -54,20 +58,43 @@ class _HomePageState extends State<HomePage> {
       curve: Curves.easeInOut,
     );
   }
+// UnAuthPage() is in its own file
+// kept IsAuthPage() here because I currently
+// have so much behavior wrapped into this widget
+// I want to keep it in the main HomePage for now
 
+// TODO: Implement something closer to MVVM architecture to handle state and behavior
+
+// Build IsAuthPage: return a Scaffold widget
+// if GoogleSignIn returns authentication
   Scaffold IsAuthPage() {
     return Scaffold(
+      // Use header widget - found in ui/widgets/header/dart
       appBar: header(context,
-          isAppTitle: true, titleText: 'Check', removeBackButton: false),
+          isAppTitle: true, titleText: 'Check', removeBackButton: true),
       body: PageView(
         children: <Widget>[
           Center(
+            // build a ListView from all checks posted by friends
             child: ListView.builder(
                 itemCount: checks.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
+                    // TODO: onTap: () => Navigator.push(context){CheckView(checks[index])}
+                    // ie. navigate to view that renders passed Check
                     onTap: () {
-                      print(checks[index]['friend']);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckView(
+                            friend: checks[index]['friend'],
+                            status: checks[index]['status'],
+                            statusMessage: checks[index]['statusMessage'],
+                            checkTime: checks[index]['checkTime'],
+                            profileImage: checks[index]['profileImage'],
+                          ),
+                        ),
+                      );
                     },
                     child: Card(
                       elevation: 3.0,
@@ -84,6 +111,7 @@ class _HomePageState extends State<HomePage> {
                                 child: UserAvatar(
                                   imageURL: checks[index]['profileImage'],
                                   userName: checks[index]['friend'],
+                                  radius: 30.0,
                                 ),
                               ),
                               Container(

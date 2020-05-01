@@ -4,17 +4,18 @@ import 'dart:math';
 class UserAvatar extends StatelessWidget {
   String imageURL;
   String userName;
-  UserAvatar({this.imageURL, this.userName});
+  double radius;
+  UserAvatar({this.imageURL, this.userName, this.radius});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: 30.0,
-      height: 30.0,
+      width: radius,
+      height: radius,
       decoration: BoxDecoration(
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(radius),
       ),
       child: ClipOval(
         child: imageURL == null
