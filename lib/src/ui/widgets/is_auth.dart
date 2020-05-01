@@ -20,7 +20,8 @@ class _IsAuthPageState extends State<IsAuthPage> {
   // vars
   PageController pageController; //declare pageController variable
   int pageIndex = 0;
-  final dummyChecks = checks;
+  // TODO: build checks
+  final checks = dummyChecks;
 
   // Functions/methods
   @override
@@ -66,11 +67,11 @@ class _IsAuthPageState extends State<IsAuthPage> {
         children: <Widget>[
           Center(
             child: ListView.builder(
-                itemCount: dummyChecks.length,
+                itemCount: checks.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      print(dummyChecks[index]['friend']);
+                      print(checks[index]['friend']);
                     },
                     child: Card(
                       elevation: 3.0,
@@ -85,8 +86,8 @@ class _IsAuthPageState extends State<IsAuthPage> {
                                 margin:
                                     EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                                 child: UserAvatar(
-                                  imageURL: dummyChecks[index]['profileImage'],
-                                  userName: dummyChecks[index]['friend'],
+                                  imageURL: checks[index]['profileImage'],
+                                  userName: checks[index]['friend'],
                                 ),
                               ),
                               Container(
@@ -97,7 +98,7 @@ class _IsAuthPageState extends State<IsAuthPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      dummyChecks[index]['friend'],
+                                      checks[index]['friend'],
                                       style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14.0,
@@ -106,7 +107,7 @@ class _IsAuthPageState extends State<IsAuthPage> {
                                       ),
                                     ),
                                     Text(
-                                      'Feeling ${dummyChecks[index]['status']}, ${dummyChecks[index]['checkTime']}',
+                                      'Feeling ${checks[index]['status']}, ${checks[index]['checkTime']}',
                                       style: TextStyle(
                                         color: Theme.of(context).accentColor,
                                         fontSize: 12.0,
@@ -132,7 +133,7 @@ class _IsAuthPageState extends State<IsAuthPage> {
                                   padding: EdgeInsets.fromLTRB(
                                       10.0, 10.0, 10.0, 10.0),
                                   child: Text(
-                                    dummyChecks[index]['statusMessage'],
+                                    checks[index]['statusMessage'],
                                   ),
                                 ),
                               ),

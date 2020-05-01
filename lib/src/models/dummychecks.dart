@@ -1,4 +1,4 @@
-final checks = [
+final dummyChecks = [
   {
     'friend': 'Joe Winklesmith',
     'status': 'Happy',
