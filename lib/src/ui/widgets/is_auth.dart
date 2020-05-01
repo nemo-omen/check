@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 // Widget imports
-import 'package:check/src/widgets/user_avatar.dart';
-import 'package:check/src/widgets/header.dart';
+import 'package:check/src/ui/widgets/user_avatar.dart';
+import 'package:check/src/ui/widgets/header.dart';
 // Page imports
-import 'package:check/src/pages/friends.dart';
-import 'package:check/src/pages/messages.dart';
-import 'package:check/src/pages/settings.dart';
+import 'package:check/src/ui/views/friends.dart';
+import 'package:check/src/ui/views/messages.dart';
+import 'package:check/src/ui/views/settings.dart';
 // model imports
 import 'package:check/src/models/dummychecks.dart';
 

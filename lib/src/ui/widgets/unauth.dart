@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
-import 'package:check/src/pages/home.dart';
+import 'package:check/src/ui/views/home.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
