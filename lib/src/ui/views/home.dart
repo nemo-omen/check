@@ -36,22 +36,39 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     pageController = PageController();
 
+    // Detect whether login() function resulted in a signed in user
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      if (account != null) {
-        print(account);
-        setState(() {
-          isAuth = true;
-        });
-      } else {
-        setState(() {
-          isAuth = false;
-        });
-      }
+      handleSignIn(account);
+    }, onError: (err) {
+      print('Error signing in: $err');
+    });
+    // Reauthenticate user on app open
+    googleSignIn
+        .signInSilently(
+      suppressErrors: false,
+    )
+        .then((account) {
+      handleSignIn(account);
+    }).catchError((err) {
+      print('Error signing in: $err');
     });
   }
 
   login() {
     googleSignIn.signIn();
+  }
+
+  handleSignIn(GoogleSignInAccount account) {
+    if (account != null) {
+      print(account);
+      setState(() {
+        isAuth = true;
+      });
+    } else {
+      setState(() {
+        isAuth = false;
+      });
+    }
   }
 
 // don't forget to dispose of any controllers to prevent leaks
