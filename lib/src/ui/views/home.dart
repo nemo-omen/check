@@ -3,26 +3,28 @@ import 'package:flutter_icons/flutter_icons.dart';
 // ! Widget imports
 import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:check/src/ui/widgets/header.dart';
-import 'package:check/src/ui/widgets/unauth.dart';
+import 'package:check/src/ui/widgets/status_badge.dart';
 // ! Page imports
 import 'package:check/src/ui/views/friends.dart';
 import 'package:check/src/ui/views/messages.dart';
 import 'package:check/src/ui/views/settings.dart';
 // ! Model imports
 import 'package:check/src/models/dummychecks.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+// ! View imports
 import 'check_view.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.isAuth}) : super(key: key);
+  HomePage({Key key, this.title}) : super(key: key);
   final String title;
-  bool isAuth = false;
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   // vars
+  bool isAuth = false;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   PageController pageController; //declare pageController variable
   int pageIndex = 0;
   // TODO: build checks
@@ -33,6 +35,23 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     pageController = PageController();
+
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      if (account != null) {
+        print(account);
+        setState(() {
+          isAuth = true;
+        });
+      } else {
+        setState(() {
+          isAuth = false;
+        });
+      }
+    });
+  }
+
+  login() {
+    googleSignIn.signIn();
   }
 
 // don't forget to dispose of any controllers to prevent leaks
@@ -64,6 +83,47 @@ class _HomePageState extends State<HomePage> {
 // I want to keep it in the main HomePage for now
 
 // TODO: Implement something closer to MVVM architecture to handle state and behavior
+
+// Build UnAuthPage: return a Scaffold widget
+// if user is not authenticated
+
+  Scaffold UnAuthPage() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Check',
+              style: TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 72.0,
+                fontWeight: FontWeight.w200,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: RaisedButton.icon(
+                onPressed: login,
+                label: Text(
+                  'Google Log In',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                icon: Icon(
+                  FlutterIcons.google_ant,
+                  color: Colors.white,
+                ),
+                color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
 // Build IsAuthPage: return a Scaffold widget
 // if GoogleSignIn returns authentication
@@ -130,13 +190,29 @@ class _HomePageState extends State<HomePage> {
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     ),
-                                    Text(
-                                      'Feeling ${checks[index]['status']}, ${checks[index]['checkTime']}',
-                                      style: TextStyle(
-                                        color: Theme.of(context).accentColor,
-                                        fontSize: 12.0,
-                                        height: 1.5,
-                                      ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Feeling ',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor,
+                                            fontSize: 12.0,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                        StatusBadge(
+                                            status: checks[index]['status']),
+                                        Text(
+                                          ' ${checks[index]['checkTime']}',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor,
+                                            fontSize: 12.0,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -293,6 +369,6 @@ class _HomePageState extends State<HomePage> {
   // finally, the actual widget
   @override
   Widget build(BuildContext context) {
-    return widget.isAuth == true ? IsAuthPage() : UnAuthPage();
+    return isAuth == true ? IsAuthPage() : UnAuthPage();
   }
 }

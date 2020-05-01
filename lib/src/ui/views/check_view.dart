@@ -1,4 +1,5 @@
 import 'package:check/src/ui/widgets/header.dart';
+import 'package:check/src/ui/widgets/status_badge.dart';
 import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -54,12 +55,23 @@ class _CheckViewState extends State<CheckView> {
                       ),
                     ),
                     Container(
-                      child: Text(
-                        'Feeling ${widget.status}, ${widget.checkTime}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          height: 1.5,
-                        ),
+                      padding: EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Feeling ',
+                            style: TextStyle(
+                              height: 1.5,
+                            ),
+                          ),
+                          StatusBadge(status: widget.status),
+                          Text(
+                            ' ${widget.checkTime}',
+                            style: TextStyle(
+                              height: 1.5,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ],
