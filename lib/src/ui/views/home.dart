@@ -11,6 +11,7 @@ import 'package:check/src/ui/views/settings.dart';
 // ! Model imports
 import 'package:check/src/models/dummychecks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:check/src/models/constants.dart';
 // ! View imports
 import 'check_view.dart';
 
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
   // TODO: build checks
   final checks = dummyChecks;
+  GoogleSignInAccount currentUser;
 
   // Functions/methods
   @override
@@ -54,6 +56,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+// login the user
+// * logout function is located in the header widget.
   login() {
     googleSignIn.signIn();
   }
@@ -63,6 +67,7 @@ class _HomePageState extends State<HomePage> {
       print(account);
       setState(() {
         isAuth = true;
+        currentUser = account;
       });
     } else {
       setState(() {
@@ -148,7 +153,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       // Use header widget - found in ui/widgets/header/dart
       appBar: header(context,
-          isAppTitle: true, titleText: 'Check', removeBackButton: true),
+          isAppTitle: true,
+          titleText: 'Check',
+          removeBackButton: true,
+          currentUser: currentUser,
+          googleSignIn: googleSignIn),
       body: PageView(
         children: <Widget>[
           Center(
