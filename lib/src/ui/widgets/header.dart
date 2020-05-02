@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/constants.dart';
 import 'package:check/src/models/user.dart';
-import 'package:check/src/ui/views/home.dart';
+// import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/views/profile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:check/src/models/user.dart';
 // import 'package:check/src/ui/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ header(
               Navigator.pop(context);
             },
             icon: Icon(
-              FlutterIcons.back_ant,
+              Icons.arrow_back,
               color: Theme.of(context).primaryColor,
             ),
           )

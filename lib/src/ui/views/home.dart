@@ -11,6 +11,7 @@ import 'package:check/src/ui/views/friends.dart';
 import 'package:check/src/ui/views/messages.dart';
 // import 'package:check/src/ui/views/settings.dart';
 import 'package:check/src/ui/views/search.dart';
+import 'package:check/src/ui/views/post_check.dart';
 // ! Model imports
 import 'package:check/src/models/dummychecks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -418,7 +419,11 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print('Yum!');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        PostCheck(currentUser: currentUser)));
           },
           backgroundColor: Colors.white,
           elevation: 0.0,

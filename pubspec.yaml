@@ -39,7 +39,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - lib/assets/images/
+   - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -55,14 +55,14 @@ flutter:
   fonts:
     - family: IBM Plex Sans
       fonts:
-        - asset: lib/assets/fonts/IBMPlexSans-Medium.ttf
-        - asset: lib/assets/fonts/IBMPlexSans-MediumItalic.ttf
+        - asset: assets/fonts/IBMPlexSans-Medium.ttf
+        - asset: assets/fonts/IBMPlexSans-MediumItalic.ttf
           style: italic
-        - asset: lib/assets/fonts/IBMPlexSans-Light.ttf
+        - asset: assets/fonts/IBMPlexSans-Light.ttf
           weight: 200
     - family: Raleway
       fonts:
-        - asset: lib/assets/fonts/Raleway-Medium.ttf
+        - asset: assets/fonts/Raleway-Medium.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

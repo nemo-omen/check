@@ -70,12 +70,13 @@ class _SearchState extends State<Search> {
               size: orientation == Orientation.portrait ? 200.0 : 100.0,
             ),
             Text(
-              'Find Users',
+              'Find users',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 60.0,
-                fontWeight: FontWeight.w200,
+                fontSize: 30.0,
+                fontWeight: FontWeight.w300,
                 color: Theme.of(context).accentColor,
+                letterSpacing: 1.2,
               ),
             ),
           ],
