@@ -20,7 +20,7 @@ class StatusBadge extends StatelessWidget {
         break;
       case 'Anxious':
         {
-          return Colors.grey[200];
+          return Colors.brown[200];
         }
         break;
       case 'Depressed':
@@ -56,15 +56,21 @@ class StatusBadge extends StatelessWidget {
         {
           return Colors.blueGrey[200];
         }
+        break;
+      default:
+        {
+          return Colors.grey[200];
+        }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Badge(
-      badgeContent: Text(this.status),
+      badgeContent: Text(this.status != null ? this.status : 'Select status',
+          style: TextStyle(color: Colors.grey[800])),
       badgeColor: statusColor(this.status),
-      padding: EdgeInsets.all(2.0),
+      padding: EdgeInsets.all(3.0),
       shape: BadgeShape.square,
       borderRadius: 5,
       animationType: BadgeAnimationType.fade,
