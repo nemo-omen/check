@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +130,13 @@ class UserResult extends StatelessWidget {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: () => print('Tapped'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Profile(currentUser: user)));
+            },
             child: ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.grey,
