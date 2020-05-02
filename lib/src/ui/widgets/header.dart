@@ -1,16 +1,18 @@
 import 'package:check/src/models/constants.dart';
-import 'package:check/src/ui/views/profile.dart';
-import 'package:check/src/ui/widgets/user_avatar.dart';
+// import 'package:check/src/models/user.dart';
+// import 'package:check/src/ui/views/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-header(context,
-    {bool isAppTitle = false,
-    String titleText,
-    removeBackButton = false,
-    GoogleSignIn googleSignIn,
-    GoogleSignInAccount currentUser}) {
+header(
+  context, {
+  bool isAppTitle = false,
+  String titleText,
+  removeBackButton = false,
+  GoogleSignIn googleSignIn,
+  // User currentUser
+}) {
   // Handle PopupMenuButton choices
 
   void logout() {
@@ -20,11 +22,12 @@ header(context,
   void userMenuChoice(choice) {
     switch (choice) {
       case 'Profile':
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    Profile(currentUser: currentUser)));
+        print('Fix meeee!');
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (BuildContext context) =>
+        //             Profile(currentUser: currentUser)));
         break;
       case 'Sign Out':
         logout();
@@ -47,26 +50,28 @@ header(context,
             ),
           )
         : Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GestureDetector(
-              onTap: () {
-                print(currentUser);
+            padding: const EdgeInsets.all(5.0),
+            // child: GestureDetector(
+            child: PopupMenuButton<String>(
+              onSelected: userMenuChoice,
+              itemBuilder: (BuildContext context) {
+                return Constants.choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
               },
-              child: PopupMenuButton<String>(
-                onSelected: userMenuChoice,
-                itemBuilder: (BuildContext context) {
-                  return Constants.choices.map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
-                icon: CircleAvatar(
-                    backgroundImage: NetworkImage(currentUser.photoUrl),
-                    radius: 30.0),
+              icon: Icon(
+                FlutterIcons.setting_ant,
+                color: Theme.of(context).primaryColor,
               ),
+              // icon: CircleAvatar(
+              //     backgroundImage:
+              //         NetworkImage(currentUser.photoUrl.toString()),
+              //     radius: 30.0),
             ),
+            // ),
           ),
     backgroundColor: Colors.white,
     centerTitle: true,

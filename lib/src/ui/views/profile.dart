@@ -1,7 +1,8 @@
+import 'package:check/src/models/user.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
-  final currentUser;
+  User currentUser;
   Profile({this.currentUser});
   @override
   _ProfileState createState() => _ProfileState();
@@ -25,7 +26,8 @@ class _ProfileState extends State<Profile> {
               GestureDetector(
                 onTap: setProfilePicture,
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(widget.currentUser.photoUrl),
+                  backgroundImage:
+                      NetworkImage(widget.currentUser.photoUrl.toString()),
                   radius: 60.0,
                 ),
               ),
@@ -34,9 +36,17 @@ class _ProfileState extends State<Profile> {
                 endIndent: 50.0,
               ),
               Container(
-                child: Text(widget.currentUser.displayName,
+                child: Text(widget.currentUser.displayName.toString(),
                     style: TextStyle(fontSize: 30.0, color: Colors.black)),
               ),
+              Container(
+                  child: Text(
+                '@${widget.currentUser.userName.toString()}',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 20.0,
+                ),
+              )),
             ],
           ),
         ),

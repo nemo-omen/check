@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 // ! Widget imports
@@ -5,15 +6,26 @@ import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/status_badge.dart';
 // ! Page imports
+import 'package:check/src/ui/views/create_account.dart';
 import 'package:check/src/ui/views/friends.dart';
 import 'package:check/src/ui/views/messages.dart';
-import 'package:check/src/ui/views/settings.dart';
+// import 'package:check/src/ui/views/settings.dart';
+import 'package:check/src/ui/views/search.dart';
 // ! Model imports
 import 'package:check/src/models/dummychecks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:check/src/models/constants.dart';
+import 'package:check/src/models/user.dart';
 // ! View imports
 import 'check_view.dart';
+
+// globals
+final GoogleSignIn googleSignIn = GoogleSignIn();
+final usersRef = Firestore.instance.collection('users');
+GoogleSignInAccount fireStoreUser;
+User currentUser;
+
+// create a timestamp variable you can use whenever you need it
+final DateTime timestamp = DateTime.now();
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -25,12 +37,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // vars
   bool isAuth = false;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
   PageController pageController; //declare pageController variable
   int pageIndex = 0;
   // TODO: build checks
   final checks = dummyChecks;
-  GoogleSignInAccount currentUser;
 
   // Functions/methods
   @override
@@ -65,15 +75,46 @@ class _HomePageState extends State<HomePage> {
   handleSignIn(GoogleSignInAccount account) {
     if (account != null) {
       print(account);
+      // if login is successful, call createFirestoreUser()
+      createFirestoreUser();
       setState(() {
         isAuth = true;
-        currentUser = account;
       });
     } else {
       setState(() {
         isAuth = false;
       });
     }
+  }
+
+  // called if login is successful => create user in firestore collection if doesn't exist
+  createFirestoreUser() async {
+    // 1)check if user exists is users collection in database
+    // according to id
+    final GoogleSignInAccount user = googleSignIn.currentUser;
+    DocumentSnapshot doc = await usersRef.document(user.id).get();
+
+    if (!doc.exists) {
+      // 2)if user !exists, route to CreateAccountView
+      //and await the returned value ... store in a nice variable
+      final userName = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateAccount()));
+
+      // 3)get userName from CreateAccount, use it to make new user document
+      // in users collection
+      usersRef.document(user.id).setData({
+        'id': user.id,
+        'userName': userName,
+        'photoUrl': user.photoUrl,
+        'displayName': user.displayName,
+        'bio': '',
+        'timestamp': timestamp,
+      });
+      // fetch the changed document and use it to create the user instance
+      doc = await usersRef.document(user.id).get();
+    }
+    // go ahead and create a User instance from the firestore document snapshot
+    currentUser = User.fromDocument(doc);
   }
 
 // don't forget to dispose of any controllers to prevent leaks
@@ -109,7 +150,7 @@ class _HomePageState extends State<HomePage> {
 // Build UnAuthPage: return a Scaffold widget
 // if user is not authenticated
 
-  Scaffold UnAuthPage() {
+  Scaffold unAuthPage() {
     return Scaffold(
       body: Center(
         child: Column(
@@ -149,15 +190,18 @@ class _HomePageState extends State<HomePage> {
 
 // Build IsAuthPage: return a Scaffold widget
 // if GoogleSignIn returns authentication
-  Scaffold IsAuthPage() {
+  Scaffold isAuthPage() {
     return Scaffold(
+      backgroundColor: Colors.blue[200],
       // Use header widget - found in ui/widgets/header/dart
-      appBar: header(context,
-          isAppTitle: true,
-          titleText: 'Check',
-          removeBackButton: true,
-          currentUser: currentUser,
-          googleSignIn: googleSignIn),
+      appBar: header(
+        context,
+        isAppTitle: true,
+        titleText: 'Check',
+        removeBackButton: true,
+        googleSignIn: googleSignIn,
+        // currentUser: currentUser
+      ),
       body: PageView(
         children: <Widget>[
           Center(
@@ -316,8 +360,8 @@ class _HomePageState extends State<HomePage> {
           // include each page here for PageView
           FriendsPage(),
           Messages(),
-          // Search(),
-          Settings(),
+          Search(),
+          // Settings(),
         ],
         // set controller
         controller: pageController,
@@ -364,7 +408,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              FlutterIcons.setting_ant,
+              FlutterIcons.search1_ant,
               size: 20.0,
             ),
             title: Text(''),
@@ -395,6 +439,6 @@ class _HomePageState extends State<HomePage> {
   // finally, the actual widget
   @override
   Widget build(BuildContext context) {
-    return isAuth == true ? IsAuthPage() : UnAuthPage();
+    return isAuth == true ? isAuthPage() : unAuthPage();
   }
 }
