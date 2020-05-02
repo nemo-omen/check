@@ -1,4 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/constants.dart';
+import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/home.dart';
+import 'package:check/src/ui/views/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:check/src/models/user.dart';
 // import 'package:check/src/ui/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +16,7 @@ header(
   String titleText,
   removeBackButton = false,
   GoogleSignIn googleSignIn,
-  // User currentUser
+  User currentUser,
 }) {
   // Handle PopupMenuButton choices
 
@@ -22,12 +27,12 @@ header(
   void userMenuChoice(choice) {
     switch (choice) {
       case 'Profile':
-        print('Fix meeee!');
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (BuildContext context) =>
-        //             Profile(currentUser: currentUser)));
+        print(currentUser.displayName);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    Profile(currentUser: currentUser)));
         break;
       case 'Sign Out':
         logout();
@@ -62,14 +67,16 @@ header(
                   );
                 }).toList();
               },
-              icon: Icon(
-                FlutterIcons.setting_ant,
-                color: Theme.of(context).primaryColor,
+              // icon: Icon(
+              //   FlutterIcons.setting_ant,
+              //   color: Theme.of(context).primaryColor,
+              // ),
+              icon: CircleAvatar(
+                backgroundImage:
+                    CachedNetworkImageProvider(currentUser.photoUrl),
+                backgroundColor: Theme.of(context).primaryColor,
+                radius: 20.0,
               ),
-              // icon: CircleAvatar(
-              //     backgroundImage:
-              //         NetworkImage(currentUser.photoUrl.toString()),
-              //     radius: 30.0),
             ),
             // ),
           ),

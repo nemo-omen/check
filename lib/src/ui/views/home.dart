@@ -114,7 +114,9 @@ class _HomePageState extends State<HomePage> {
       doc = await usersRef.document(user.id).get();
     }
     // go ahead and create a User instance from the firestore document snapshot
-    currentUser = User.fromDocument(doc);
+    setState(() {
+      currentUser = User.fromDocument(doc);
+    });
   }
 
 // don't forget to dispose of any controllers to prevent leaks
@@ -194,14 +196,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.blue[200],
       // Use header widget - found in ui/widgets/header/dart
-      appBar: header(
-        context,
-        isAppTitle: true,
-        titleText: 'Check',
-        removeBackButton: true,
-        googleSignIn: googleSignIn,
-        // currentUser: currentUser
-      ),
+      appBar: header(context,
+          isAppTitle: true,
+          titleText: 'Check',
+          removeBackButton: true,
+          googleSignIn: googleSignIn,
+          currentUser: currentUser),
       body: PageView(
         children: <Widget>[
           Center(
@@ -227,7 +227,8 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     child: Card(
-                      elevation: 3.0,
+                      elevation: 0.0,
+                      color: Colors.white.withOpacity(0.9),
                       margin:
                           EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                       child: Column(
