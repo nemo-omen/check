@@ -72,8 +72,10 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void logOut() {
-    googleSignIn.signOut();
+  void logOut() async {
+    await googleSignIn.signOut();
+    Navigator.pushAndRemoveUntil(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
     // Navigator.pop(context);
   }
 

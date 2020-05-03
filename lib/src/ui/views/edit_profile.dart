@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/home.dart';
@@ -14,22 +16,34 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  // text field controllers
   TextEditingController displayNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool isLoading = false;
   User user;
+
+  // keep track of whether page is awaiting results
+  bool isLoading = false;
+
+  // keep track of whether the bio field is validated
+  bool _bioValid = true;
+  // keep track of whether the displayName field is valid
+  bool _displayNameValid = true;
 
   @override
   void initState() {
     super.initState();
+    // fetch the user and init state with result
     getUser();
   }
 
   getUser() async {
     setState(() {
+      // since we are fetching a user, the page is now loading
       isLoading = true;
     });
+    // usersRef is available because we imported Home(), where the usersRef object lives
     DocumentSnapshot doc = await usersRef.document(widget.currentUserId).get();
     user = User.fromDocument(doc);
     displayNameController.text = user.displayName;
@@ -57,6 +71,7 @@ class _EditProfileState extends State<EditProfile> {
           controller: displayNameController,
           decoration: InputDecoration(
             hintText: 'Update display name',
+            errorText: _displayNameValid ? null : 'Needs to be longer...',
           ),
         ),
       ],
@@ -82,15 +97,56 @@ class _EditProfileState extends State<EditProfile> {
           maxLines: 4,
           decoration: InputDecoration(
             hintText: 'Update bio',
+            errorText: _bioValid ? null : 'That\'s too short...',
           ),
         ),
       ],
     );
   }
 
+  // call this when user pressed 'Update' button
+  updateProfileData() {
+    setState(() {
+      // if either displayName or bio fields are empty or have fewer than three characters
+      // set their validity flags to false
+      if (bioController.text.trim().length < 3 ||
+          bioController.text.trim().isEmpty ||
+          bioController.text.trim().length > 240) {
+        _bioValid = false;
+      } else {
+        _bioValid = true;
+      }
+
+      if (displayNameController.text.trim().length < 3 ||
+          displayNameController.text.trim().isEmpty) {
+        _displayNameValid = false;
+      } else {
+        _displayNameValid = true;
+      }
+    });
+    // now, if both validity flags are true, proceed to submit changes
+    if (_displayNameValid && _bioValid) {
+      usersRef.document(widget.currentUserId).updateData({
+        'displayName': displayNameController.text,
+        'bio': bioController.text,
+      });
+
+      SnackBar snackbar = SnackBar(
+        content: Text('Successfully updated profile!'),
+      );
+      _scaffoldKey.currentState.showSnackBar(snackbar);
+      // send the value of userName back to home to be used in createFirestoreUser()
+      // but wait a second so they see the snackbar!
+      Timer(Duration(milliseconds: 1000), () {
+        Navigator.pop(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.blue[100],
       appBar: AppBar(
@@ -161,10 +217,7 @@ class _EditProfileState extends State<EditProfile> {
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   color: Colors.green,
-                                  onPressed: () {
-                                    print('Update profile data');
-                                    Navigator.pop(context);
-                                  },
+                                  onPressed: updateProfileData,
                                 ),
                                 FlatButton.icon(
                                   label: Text(
