@@ -136,7 +136,7 @@ class UserResult extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          Profile(currentUser: user)));
+                          Profile(profileId: user.id)));
             },
             child: ListTile(
               leading: CircleAvatar(

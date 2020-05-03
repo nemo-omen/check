@@ -5,7 +5,6 @@ import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/profile.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:check/src/models/user.dart';
-// import 'package:check/src/ui/views/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,7 +31,7 @@ header(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    Profile(currentUser: currentUser)));
+                    Profile(profileId: currentUser?.id)));
         break;
       case 'Sign Out':
         logout();
