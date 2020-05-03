@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/models/status_types.dart';
 import 'package:check/src/ui/widgets/status_badge.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
@@ -57,8 +57,8 @@ class _PostCheckState extends State<PostCheck> {
     List<Placemark> placemarks = await Geolocator()
         .placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
-    String completeAddress =
-        '${placemark.subThoroughfare}, ${placemark.thoroughfare}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}';
+    // String completeAddress =
+    //     '${placemark.subThoroughfare}, ${placemark.thoroughfare}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}';
     String formattedAddress =
         '${placemark.locality}, ${placemark.administrativeArea}';
     setState(() {
@@ -102,8 +102,6 @@ class _PostCheckState extends State<PostCheck> {
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -117,7 +115,7 @@ class _PostCheckState extends State<PostCheck> {
           color: Theme.of(context).primaryColor,
         ),
         title: Text(
-          'New Check',
+          'New Check In',
           style: TextStyle(
             color: Theme.of(context).primaryColor,
           ),
@@ -136,7 +134,7 @@ class _PostCheckState extends State<PostCheck> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(right: 10.0),
+                    margin: EdgeInsets.only(right: 15.0),
                     child: CircleAvatar(
                       backgroundImage:
                           CachedNetworkImageProvider(_currentUser.photoUrl),
@@ -154,15 +152,15 @@ class _PostCheckState extends State<PostCheck> {
                         }).toList();
                       },
                       onSelected: addStatus,
-                      icon: Icon(Icons.arrow_drop_down),
+                      child: StatusBadge(status: selectedStatus),
                       elevation: 1.0,
                     ),
                   ),
+                  // Container(
+                  //   child: StatusBadge(status: selectedStatus),
+                  // ),
                   Container(
-                    child: StatusBadge(status: selectedStatus),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    margin: EdgeInsets.symmetric(horizontal: 5.0),
                     child: FlatButton.icon(
                       label: Text(
                         currentLocation == null
@@ -195,7 +193,7 @@ class _PostCheckState extends State<PostCheck> {
                 child: TextField(
                   controller: _checkController,
                   autofocus: true,
-                  maxLines: 10,
+                  maxLines: 5,
                   style: TextStyle(
                     fontSize: 18.0,
                   ),

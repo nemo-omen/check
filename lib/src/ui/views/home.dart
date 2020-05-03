@@ -1,25 +1,21 @@
-import 'package:check/src/models/check.dart';
-import 'package:check/src/ui/widgets/progress.dart';
+import 'package:check/src/ui/views/timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 // ! Widget imports
-import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:check/src/ui/widgets/header.dart';
-import 'package:check/src/ui/widgets/status_badge.dart';
 // ! Page imports
+import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/views/create_account.dart';
-import 'package:check/src/ui/views/friends.dart';
+// import 'package:check/src/ui/views/friends.dart';
 import 'package:check/src/ui/views/messages.dart';
 // import 'package:check/src/ui/views/settings.dart';
 import 'package:check/src/ui/views/search.dart';
 import 'package:check/src/ui/views/post_check.dart';
 // ! Model imports
-import 'package:check/src/models/dummychecks.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:check/src/models/user.dart';
 // ! View imports
-import 'check_view.dart';
 
 // globals
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -43,9 +39,6 @@ class _HomePageState extends State<HomePage> {
   bool isAuth = false;
   PageController pageController; //declare pageController variable
   int pageIndex = 0;
-  Future<QuerySnapshot> checksFuture = checksRef.getDocuments();
-  // TODO: build checks
-  final checks = dummyChecks;
 
   // Functions/methods
   @override
@@ -152,8 +145,6 @@ class _HomePageState extends State<HomePage> {
 // have so much behavior wrapped into this widget
 // I want to keep it in the main HomePage for now
 
-// TODO: Implement something closer to MVVM architecture to handle state and behavior
-
 // Build UnAuthPage: return a Scaffold widget
 // if user is not authenticated
 
@@ -174,7 +165,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 30.0),
-              child: RaisedButton.icon(
+              child: FlatButton.icon(
                 onPressed: login,
                 label: Text(
                   'Google Log In',
@@ -187,6 +178,9 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                 ),
                 color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
               ),
             ),
           ],
@@ -195,189 +189,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // build list of users posts to display on the upcoming isAuthPage()
-
-  buildChecksList() {
-    return FutureBuilder(
-        future: checksFuture,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return circularProgress();
-          }
-          List returnedChecks = [];
-          snapshot.data.documents.forEach((doc) {
-            Check check = Check.fromDocument(doc);
-            returnedChecks.add(check);
-          });
-          return ListView.builder(
-              itemCount: returnedChecks.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  // TODO: onTap: () => Navigator.push(context){CheckView(checks[index])}
-                  // ie. navigate to view that renders passed Check
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CheckView(
-                          friend: returnedChecks[index]['userId'],
-                          status: returnedChecks[index]['status'],
-                          statusMessage: returnedChecks[index]['message'],
-                          checkTime: checks[index]['checkTime'],
-                        ),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    elevation: 0.0,
-                    color: Colors.white.withOpacity(0.9),
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                              child: UserAvatar(
-                                imageURL: currentUser.photoUrl,
-                                userName: returnedChecks[index].id,
-                                radius: 30.0,
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 10.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    returnedChecks[index].userId,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14.0,
-                                      letterSpacing: 1.2,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'Feeling ',
-                                        style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 12.0,
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                      StatusBadge(
-                                          status: returnedChecks[index].status),
-                                      Text(
-                                        ' ${returnedChecks[index].checkTime.toString()}',
-                                        style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 12.0,
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          height: 1.0,
-                          indent: 10.0,
-                          endIndent: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Flexible(
-                              child: Container(
-                                padding:
-                                    EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                                child: Text(
-                                  returnedChecks[index].message,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          indent: 10.0,
-                          endIndent: 10.0,
-                          height: 1.0,
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(0.0),
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                iconSize: 15.0,
-                                padding: EdgeInsets.all(0.0),
-                                icon: Icon(
-                                  FlutterIcons.message_outline_mco,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                iconSize: 15.0,
-                                padding: EdgeInsets.all(0.0),
-                                icon: Icon(
-                                  FlutterIcons.heart_outline_mco,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                padding: EdgeInsets.all(0.0),
-                                iconSize: 15.0,
-                                icon: Icon(
-                                  FlutterIcons.alert_outline_mco,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-        });
-  }
-
 // Build IsAuthPage: return a Scaffold widget
 // if GoogleSignIn returns authentication
   Scaffold isAuthPage() {
     return Scaffold(
       backgroundColor: Colors.blue[200],
       // Use header widget - found in ui/widgets/header/dart
-      appBar: header(context,
-          isAppTitle: true,
-          titleText: 'Check',
-          removeBackButton: true,
-          googleSignIn: googleSignIn,
-          currentUser: currentUser),
       body: PageView(
         children: <Widget>[
-          Center(
-            // build a ListView from all checks posted by friends
-            child: buildChecksList(),
-          ),
           // include each page here for PageView
-          FriendsPage(),
+          Timeline(),
+          Profile(profileId: currentUser?.id),
           Messages(),
           Search(),
           // Settings(),
@@ -406,7 +228,7 @@ class _HomePageState extends State<HomePage> {
             icon: Padding(
               padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0),
               child: Icon(
-                FlutterIcons.team_ant,
+                FlutterIcons.user_ant,
                 size: 20.0,
               ),
             ),

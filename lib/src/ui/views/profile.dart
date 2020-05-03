@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/edit_profile.dart';
 import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
@@ -43,13 +44,18 @@ class _ProfileState extends State<Profile> {
   }
 
   editProfile() {
-    print('Edit profile pressed.');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return EditProfile(currentUserId: currentUserId);
+      }),
+    );
   }
 
   // function for building different profile buttons depending on
-  buildButton({String text, Function function}) {
+  buildButton({String text, Function function, color}) {
     return FlatButton(
-      color: Theme.of(context).primaryColor.withOpacity(0.8),
+      color: color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
@@ -66,13 +72,29 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  void logOut() {
+    googleSignIn.signOut();
+    // Navigator.pop(context);
+  }
+
   buildProfileButton() {
     // if we're viewing our own profile - show 'Edit Profile' button
     bool isProfileOwner = currentUserId == widget.profileId;
     if (isProfileOwner) {
-      return buildButton(
-        text: 'Edit Profile',
-        function: editProfile,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          buildButton(
+            text: 'Edit Profile',
+            function: editProfile,
+            color: Theme.of(context).primaryColor.withOpacity(0.8),
+          ),
+          buildButton(
+            text: 'Log Out',
+            function: logOut,
+            color: Colors.red[300],
+          ),
+        ],
       );
     }
   }
@@ -139,7 +161,6 @@ class _ProfileState extends State<Profile> {
                   padding: EdgeInsets.only(
                     top: 15.0,
                   ),
-                  width: 200.0,
                   child: buildProfileButton(),
                 ),
                 Divider(
@@ -200,6 +221,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[100],
       appBar: header(context, titleText: 'Profile'),
       body: ListView(
         children: <Widget>[

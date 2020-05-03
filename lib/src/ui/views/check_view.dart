@@ -8,7 +8,7 @@ class CheckView extends StatefulWidget {
   final String friend;
   final String status;
   final String statusMessage;
-  final String checkTime; //TODO: change this into a DateTime object
+  final String checkTime;
   final String profileImage;
   CheckView(
       {this.friend,

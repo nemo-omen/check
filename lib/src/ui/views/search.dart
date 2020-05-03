@@ -5,7 +5,6 @@ import 'package:check/src/ui/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'home.dart';
 
@@ -33,8 +32,7 @@ class _SearchState extends State<Search> {
 
   AppBar buildSearchField() {
     return AppBar(
-      primary: false,
-      backgroundColor: Colors.blue[200],
+      backgroundColor: Colors.white,
       elevation: 0.0,
       bottomOpacity: 0.25,
       title: TextFormField(
@@ -45,7 +43,7 @@ class _SearchState extends State<Search> {
           prefixIcon: Icon(
             FlutterIcons.account_box_mdi,
             size: 28.0,
-            color: Colors.white,
+            color: Colors.grey,
           ),
           suffixIcon: IconButton(
             icon: Icon(FlutterIcons.close_ant),
@@ -66,7 +64,7 @@ class _SearchState extends State<Search> {
           children: <Widget>[
             Icon(
               FlutterIcons.search1_ant,
-              color: Colors.grey[200],
+              color: Colors.grey.withOpacity(0.2),
               size: orientation == Orientation.portrait ? 200.0 : 100.0,
             ),
             Text(
@@ -108,7 +106,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[200],
+      backgroundColor: Colors.blue[100],
       appBar: buildSearchField(),
       body:
           searchResultsFuture == null ? buildNoContent() : buildSearchResults(),
