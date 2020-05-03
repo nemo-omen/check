@@ -2,7 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/models/status_types.dart';
 import 'package:check/src/ui/widgets/status_badge.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+final checksRef = Firestore.instance.collection('checks');
+final DateTime timestamp = DateTime.now();
 
 class PostCheck extends StatefulWidget {
   User currentUser;
@@ -12,11 +16,11 @@ class PostCheck extends StatefulWidget {
 }
 
 class _PostCheckState extends State<PostCheck> {
-  User _currentUser;
   String selectedStatus;
   String checkMessage;
   final _checkFormKey = GlobalKey<FormState>();
   TextEditingController _checkController = TextEditingController();
+  User _currentUser;
 
   @override
   void initState() {
@@ -24,6 +28,12 @@ class _PostCheckState extends State<PostCheck> {
     if (widget.currentUser != null) {
       _currentUser = widget.currentUser;
     }
+  }
+
+  @override
+  void dispose() {
+    _checkController.dispose();
+    super.dispose();
   }
 
   addStatus(status) {
@@ -34,17 +44,23 @@ class _PostCheckState extends State<PostCheck> {
 
   submit(value) {
     checkMessage = value;
-    print('Check: Feeling $selectedStatus, Message: $checkMessage');
+    print('$_currentUser: Feeling $selectedStatus, Message: $checkMessage');
     _checkController.clear();
-    selectedStatus = null;
+    createFirestoreCheck();
+    setState(() {
+      selectedStatus = null;
+    });
+    // Navigator.pop(context);
   }
 
-  // saveCheck(value) {
-  //   setState(() {
-  //     checkMessage = value;
-  //   });
-  //   submit();
-  // }
+  createFirestoreCheck() async {
+    var _savedCheck = await checksRef.add({
+      'checkTime': timestamp,
+      'status': selectedStatus,
+      'message': checkMessage,
+      'userId': _currentUser.id,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
