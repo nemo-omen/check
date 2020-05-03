@@ -4,12 +4,18 @@ import 'package:check/src/models/status_types.dart';
 import 'package:check/src/ui/widgets/status_badge.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:uuid/uuid.dart';
 
-final checksRef = Firestore.instance.collection('checks');
-final DateTime timestamp = DateTime.now();
+import 'home.dart';
+
+// Todo: Add geolocation
+
+// final checksRef = Firestore.instance.collection('checks');
+// final DateTime timestamp = DateTime.now();
 
 class PostCheck extends StatefulWidget {
-  User currentUser;
+  final User currentUser;
   PostCheck({this.currentUser});
   @override
   _PostCheckState createState() => _PostCheckState();
@@ -20,7 +26,10 @@ class _PostCheckState extends State<PostCheck> {
   String checkMessage;
   final _checkFormKey = GlobalKey<FormState>();
   TextEditingController _checkController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   User _currentUser;
+  String currentLocation;
+  String checkId = Uuid().v4();
 
   @override
   void initState() {
@@ -42,23 +51,52 @@ class _PostCheckState extends State<PostCheck> {
     });
   }
 
+  setLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placemarks[0];
+    String completeAddress =
+        '${placemark.subThoroughfare}, ${placemark.thoroughfare}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}';
+    String formattedAddress =
+        '${placemark.locality}, ${placemark.administrativeArea}';
+    setState(() {
+      currentLocation = formattedAddress;
+    });
+  }
+
   submit(value) {
     checkMessage = value;
-    print('$_currentUser: Feeling $selectedStatus, Message: $checkMessage');
+    print(
+        '${_currentUser.displayName}: Feeling $selectedStatus, Message: $checkMessage');
     _checkController.clear();
     createFirestoreCheck();
     setState(() {
       selectedStatus = null;
+      currentLocation = null;
+      checkId = Uuid().v4();
     });
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   createFirestoreCheck() async {
-    var _savedCheck = await checksRef.add({
-      'checkTime': timestamp,
+    checksRef
+        .document(widget.currentUser.id)
+        .collection('userPosts')
+        .document(checkId)
+        .setData({
+      'checkId': checkId,
+      'ownerId': widget.currentUser.id,
+      'displayName': widget.currentUser.displayName,
+      'userName': widget.currentUser.userName,
+      'mediaUrl': '',
       'status': selectedStatus,
       'message': checkMessage,
-      'userId': _currentUser.id,
+      'location': currentLocation,
+      'timestamp': timestamp,
+      'likes': {},
+      'comments': {},
     });
   }
 
@@ -95,6 +133,7 @@ class _PostCheckState extends State<PostCheck> {
               color: Colors.white,
               padding: EdgeInsets.all(10.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(right: 10.0),
@@ -122,6 +161,28 @@ class _PostCheckState extends State<PostCheck> {
                   Container(
                     child: StatusBadge(status: selectedStatus),
                   ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: FlatButton.icon(
+                      label: Text(
+                        currentLocation == null
+                            ? 'Add location'
+                            : currentLocation,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      // color: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0)),
+                      icon: Icon(
+                        Icons.my_location,
+                        color: Theme.of(context).primaryColor,
+                        size: 20.0,
+                      ),
+                      onPressed: setLocation,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -146,7 +207,6 @@ class _PostCheckState extends State<PostCheck> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 FlatButton(
                   onPressed: () {
