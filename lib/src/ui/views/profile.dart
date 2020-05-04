@@ -144,44 +144,62 @@ class _ProfileState extends State<Profile> {
             padding: EdgeInsets.all(16.0),
             child: Column(
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-                    backgroundColor: Colors.grey,
-                    radius: 60.0,
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    user.displayName,
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w400,
-                      letterSpacing: 1.2,
-                      color: Theme.of(context).accentColor,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(
+                        right: 20.0,
+                      ),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            CachedNetworkImageProvider(user.photoUrl),
+                        backgroundColor: Colors.grey,
+                        radius: 40.0,
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    '@${user.userName}',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.w300,
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            user.displayName,
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 1.2,
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            '@${user.userName}',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  ],
+                ),
+                Divider(
+                  color: Theme.of(context).accentColor,
+                  thickness: 0.7,
+                  indent: 10.0,
+                  endIndent: 10.0,
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 14.0),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 30.0,
+                    horizontal: 10.0,
                   ),
                   child: Text(
                     user.bio != null ? user.bio : '',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontWeight: FontWeight.w300,
@@ -190,16 +208,17 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 15.0,
-                  ),
-                  child: buildProfileButton(),
-                ),
                 Divider(
                   color: Theme.of(context).accentColor,
-                  height: 30.0,
-                  thickness: 0.75,
+                  thickness: 0.7,
+                  indent: 10.0,
+                  endIndent: 10.0,
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 5.0,
+                  ),
+                  child: buildProfileButton(),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -263,11 +282,6 @@ class _ProfileState extends State<Profile> {
       body: ListView(
         children: <Widget>[
           buildProfileHeader(),
-          Divider(
-            color: Theme.of(context).accentColor,
-            height: 30.0,
-            thickness: 0.75,
-          ),
           buildProfileChecks(),
         ],
       ),
