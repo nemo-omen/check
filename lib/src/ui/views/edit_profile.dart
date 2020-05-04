@@ -1,12 +1,20 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart'
+    as Im; //aliasing this si it doesn't conflict with vars
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class EditProfile extends StatefulWidget {
   final String currentUserId;
@@ -20,6 +28,10 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController displayNameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  File file;
+  String imageId = Uuid().v4();
+
+  String newProfilePhotoUrl;
 
   User user;
 
@@ -30,6 +42,8 @@ class _EditProfileState extends State<EditProfile> {
   bool _bioValid = true;
   // keep track of whether the displayName field is valid
   bool _displayNameValid = true;
+  // keep track of whether profile image is uploading
+  bool isUploading = false;
 
   @override
   void initState() {
@@ -129,6 +143,8 @@ class _EditProfileState extends State<EditProfile> {
       usersRef.document(widget.currentUserId).updateData({
         'displayName': displayNameController.text,
         'bio': bioController.text,
+        'photoUrl':
+            newProfilePhotoUrl == null ? user.photoUrl : newProfilePhotoUrl
       });
 
       SnackBar snackbar = SnackBar(
@@ -141,6 +157,143 @@ class _EditProfileState extends State<EditProfile> {
         Navigator.pop(context);
       });
     }
+  }
+
+  handleTakePhoto() async {
+    Navigator.pop(context);
+    File file = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
+    setState(() {
+      this.file = file;
+    });
+    showUploadModal();
+  }
+
+  handleChoosePhoto() async {
+    Navigator.pop(context);
+    File file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      this.file = file;
+    });
+    showUploadModal();
+  }
+
+  // firebase has a pretty small file limit. Compress your image!
+  compressImage() async {
+    // first, get a reference to temp directory
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    // read the image using the dart/image package
+    Im.Image imageFile = Im.decodeImage(file.readAsBytesSync());
+    // compress the image & encode as .jpg, writing to the temp directory
+    final compressedImage = File('$path/image_$imageId.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(imageFile, quality: 80));
+    // finally, replace the original variable reference with a reference to the compressed file
+    setState(() {
+      file = compressedImage;
+    });
+  }
+
+  handlePhotoSubmit() async {
+    setState(() {
+      isLoading = true;
+    });
+    await compressImage();
+    String mediaUrl = await uploadImage(file);
+    setState(() {
+      newProfilePhotoUrl = mediaUrl;
+      isLoading = false;
+    });
+    Navigator.pop(context);
+  }
+
+  Future<String> uploadImage(imageFile) async {
+    StorageUploadTask uploadTask =
+        storageRef.child('profile_$imageId.jpg').putFile(imageFile);
+    StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+    String downloadUrl = await storageSnap.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  // setUserPhoto() {
+  //   setState(() {
+  //     user.photoUrl = newProfilePhotoUrl;
+  //   });
+  // }
+
+  showUploadModal() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Colors.blueGrey[900],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 20.0),
+                  height: 350,
+                  child: Image.file(
+                    file,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      child: FlatButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.grey[100]),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        child: FlatButton(
+                      onPressed: () {
+                        handlePhotoSubmit();
+                      },
+                      child: Text(
+                        'Set Photo',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    )),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  selectImage(parentContext) {
+    return showDialog(
+      context: parentContext,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text('Change Profile Picture'),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text('Photo with Camera'),
+              onPressed: handleTakePhoto,
+            ),
+            SimpleDialogOption(
+                child: Text('Image from Gallery'),
+                onPressed: handleChoosePhoto),
+            SimpleDialogOption(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -183,11 +336,23 @@ class _EditProfileState extends State<EditProfile> {
                         top: 16.0,
                         bottom: 8.0,
                       ),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            CachedNetworkImageProvider(user.photoUrl),
-                        backgroundColor: Colors.grey,
-                        radius: 60.0,
+                      child: GestureDetector(
+                        onTap: () => selectImage(context),
+                        child: Badge(
+                          position: BadgePosition(bottom: 0, right: 0),
+                          badgeContent: Icon(FlutterIcons.camera_ant,
+                              color: Colors.white),
+                          badgeColor:
+                              Theme.of(context).primaryColor.withOpacity(0.4),
+                          child: CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                                newProfilePhotoUrl == null
+                                    ? user.photoUrl
+                                    : newProfilePhotoUrl),
+                            backgroundColor: Colors.grey,
+                            radius: 60.0,
+                          ),
+                        ),
                       ),
                     ),
                     Padding(

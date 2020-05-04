@@ -1,5 +1,7 @@
 import 'package:check/src/ui/views/timeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 // ! Widget imports
@@ -18,9 +20,12 @@ import 'package:check/src/models/user.dart';
 // ! View imports
 
 // globals
+// final FirebaseAuth mAuth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final usersRef = Firestore.instance.collection('users');
 final checksRef = Firestore.instance.collection('checks');
+final StorageReference storageRef = FirebaseStorage.instance.ref();
+// final Future<FirebaseUser> firebaseUser = mAuth.currentUser();
 GoogleSignInAccount fireStoreUser;
 User currentUser;
 
