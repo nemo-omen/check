@@ -9,7 +9,7 @@ class User {
   final String photoUrl;
   final String displayName;
   final String bio;
-  final List friends;
+  List friends = [];
 
   User({
     this.id,
@@ -31,6 +31,6 @@ class User {
         photoUrl: doc['photoUrl'],
         displayName: doc['displayName'],
         bio: doc['bio'],
-        friends: doc['friends']);
+        friends: doc['friends'] == null ? [] : doc['friends']);
   }
 }
