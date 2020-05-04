@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/check.dart';
 import 'package:check/src/ui/views/edit_profile.dart';
 import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
@@ -16,6 +18,33 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final String currentUserId = currentUser?.id;
+  bool isLoading = false;
+  int checksCount = 0;
+  List<Check> checks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getProfileChecks();
+  }
+
+  getProfileChecks() async {
+    setState(() {
+      isLoading = true;
+    });
+    QuerySnapshot snapshot = await checksRef
+        .document(widget.profileId)
+        .collection('userPosts')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    setState(() {
+      isLoading = false;
+      checksCount = snapshot.documents.length;
+      checks =
+          snapshot.documents.map((doc) => Check.fromDocument(doc)).toList();
+    });
+  }
+
   buildCountColumn(String label, int count) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -75,7 +104,9 @@ class _ProfileState extends State<Profile> {
   void logOut() async {
     await googleSignIn.signOut();
     Navigator.pushAndRemoveUntil(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (Route<dynamic> route) => false);
     // Navigator.pop(context);
   }
 
@@ -209,15 +240,19 @@ class _ProfileState extends State<Profile> {
                     ),
                   ],
                 ),
-                Divider(
-                  color: Theme.of(context).accentColor,
-                  height: 30.0,
-                  thickness: 0.75,
-                ),
               ],
             ),
           );
         });
+  }
+
+  buildProfileChecks() {
+    if (isLoading) {
+      return circularProgress();
+    }
+    return Column(
+      children: checks,
+    );
   }
 
   @override
@@ -228,6 +263,12 @@ class _ProfileState extends State<Profile> {
       body: ListView(
         children: <Widget>[
           buildProfileHeader(),
+          Divider(
+            color: Theme.of(context).accentColor,
+            height: 30.0,
+            thickness: 0.75,
+          ),
+          buildProfileChecks(),
         ],
       ),
     );
