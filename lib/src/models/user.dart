@@ -9,6 +9,7 @@ class User {
   final String photoUrl;
   final String displayName;
   final String bio;
+  final List friends;
 
   User({
     this.id,
@@ -17,6 +18,7 @@ class User {
     this.photoUrl,
     this.displayName,
     this.bio,
+    this.friends,
   });
 
   // Method for deserializing the document snapshot
@@ -28,6 +30,7 @@ class User {
         email: doc['email'],
         photoUrl: doc['photoUrl'],
         displayName: doc['displayName'],
-        bio: doc['bio']);
+        bio: doc['bio'],
+        friends: doc['friends']);
   }
 }

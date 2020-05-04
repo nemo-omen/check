@@ -225,10 +225,10 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Container(
-                      child: buildCountColumn('Checks', 0),
+                      child: buildCountColumn('Checks', checks.length),
                     ),
                     Container(
-                      child: buildCountColumn('Friends', 0),
+                      child: buildCountColumn('Friends', user.friends.length),
                     ),
                     Container(
                       child: Column(

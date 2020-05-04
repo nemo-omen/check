@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/profile.dart';
@@ -60,6 +61,7 @@ class Check extends StatefulWidget {
       return 0;
     }
     int count = 0;
+    // if the key is set to true, add a like
     likes.values.forEach((val) {
       if (val == true) {
         count += 1;
@@ -86,6 +88,7 @@ class Check extends StatefulWidget {
 }
 
 class _CheckState extends State<Check> {
+  final String currentUserId = currentUser?.id;
   final String checkId;
   final String ownerId;
   final String displayName;
@@ -98,6 +101,7 @@ class _CheckState extends State<Check> {
   int likeCount;
   Map likes;
   Map comments;
+  bool isLiked;
 
   _CheckState(
       {this.checkId,
@@ -122,6 +126,7 @@ class _CheckState extends State<Check> {
         }
         User user = User.fromDocument(snapshot.data);
         return ListTile(
+          // isThreeLine: true,
           leading: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(user.photoUrl),
             backgroundColor: Colors.grey,
@@ -183,41 +188,105 @@ class _CheckState extends State<Check> {
     );
   }
 
+  handleLikeCheck() {
+    bool _isLiked = likes[currentUserId] == true;
+
+    if (_isLiked) {
+      checksRef
+          .document(ownerId)
+          .collection('userPosts')
+          .document(checkId)
+          .updateData({'likes.$currentUserId': false});
+      setState(() {
+        likeCount -= 1;
+        isLiked = false;
+        likes[currentUserId] = false;
+      });
+    } else if (!_isLiked) {
+      checksRef
+          .document(ownerId)
+          .collection('userPosts')
+          .document(checkId)
+          .updateData({'likes.$currentUserId': true});
+      setState(() {
+        likeCount += 1;
+        isLiked = true;
+        likes[currentUserId] = true;
+      });
+    }
+  }
+
+  buildDeleteButton() {
+    if (currentUserId == ownerId) {
+      return FlatButton.icon(
+        icon: Icon(
+          FlutterIcons.delete_ant,
+          color: Colors.grey[700],
+          size: 20.0,
+        ),
+        label: Text(
+          'Delete',
+          style: TextStyle(
+            color: Colors.grey[700],
+          ),
+        ),
+        onPressed: () {
+          print('Delete!');
+        },
+      );
+    } else {
+      return FlatButton.icon(
+        icon: Icon(FlutterIcons.plus_ant),
+        label: Text(
+          'Add Friend',
+          style: TextStyle(
+            color: Colors.grey[700],
+          ),
+        ),
+        onPressed: () {
+          print('Add friend');
+        },
+      );
+    }
+  }
+
   getCheckFooter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        IconButton(
-          icon: Icon(
-            FlutterIcons.heart_outline_mco,
-            color: Colors.grey[700],
-            size: 20.0,
+        FlatButton.icon(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
-          onPressed: () {
-            print('Liked!');
-          },
+          icon: isLiked == true
+              ? Icon(FlutterIcons.heart_mco, color: Colors.red[300])
+              : Icon(FlutterIcons.heart_outline_mco, color: Colors.grey[700]),
+          label: Text(
+            likeCount.toString(),
+            style: TextStyle(
+              color: isLiked == true ? Colors.red[300] : Colors.grey[700],
+            ),
+          ),
+          onPressed: handleLikeCheck,
         ),
-        IconButton(
+        FlatButton.icon(
           icon: Icon(
             FlutterIcons.message1_ant,
             color: Colors.grey[700],
             size: 20.0,
           ),
+          label: Text(
+            comments != null ? comments.length.toString() : 0,
+            style: TextStyle(
+              color: Colors.grey[700],
+            ),
+          ),
           onPressed: () {
             print('Comment!');
           },
         ),
-        IconButton(
-          icon: Icon(
-            FlutterIcons.delete_ant,
-            color: Colors.grey[700],
-            size: 20.0,
-          ),
-          onPressed: () {
-            print('Delete!');
-          },
-        ),
+        buildDeleteButton(),
       ],
     );
   }
@@ -241,6 +310,7 @@ class _CheckState extends State<Check> {
 
   @override
   Widget build(BuildContext context) {
+    isLiked = (likes[currentUserId] == true);
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
