@@ -198,7 +198,7 @@ class _CheckState extends State<Check> {
       ),
       alignment: Alignment.bottomLeft,
       child: Text(
-        message,
+        message == null ? '' : message,
         style: TextStyle(
           fontSize: 16.0,
           height: 1.3,
