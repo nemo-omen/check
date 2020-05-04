@@ -21,8 +21,8 @@ class Check extends StatefulWidget {
   final String message;
   final String location;
   // final DateTime timestamp;
-  dynamic likes;
-  dynamic comments;
+  dynamic likes = {};
+  dynamic comments = {};
   int likeCount;
   int commentCount;
 
@@ -118,8 +118,8 @@ class _CheckState extends State<Check> {
   // final DateTime timestamp;
   int likeCount;
   int commentCount;
-  Map likes;
-  Map comments;
+  Map likes = {};
+  Map comments = {};
   bool isLiked;
 
   _CheckState(
