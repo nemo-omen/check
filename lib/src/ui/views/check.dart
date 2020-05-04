@@ -24,6 +24,7 @@ class Check extends StatefulWidget {
   dynamic likes;
   dynamic comments;
   int likeCount;
+  int commentCount;
 
   Check(
       {this.checkId,
@@ -37,7 +38,8 @@ class Check extends StatefulWidget {
       // this.timestamp,
       this.likes,
       this.comments,
-      this.likeCount});
+      this.likeCount,
+      this.commentCount});
 
   factory Check.fromDocument(DocumentSnapshot doc) {
     return Check(
@@ -70,6 +72,21 @@ class Check extends StatefulWidget {
     return count;
   }
 
+  int getCommentCount(comments) {
+    // if no likes, return 0
+    if (comments == null) {
+      return 0;
+    }
+    int count = 0;
+    // if the key is set to true, add a like
+    comments.values.forEach((val) {
+      if (val == true) {
+        count += 1;
+      }
+    });
+    return count;
+  }
+
   @override
   _CheckState createState() => _CheckState(
         checkId: this.checkId,
@@ -84,6 +101,7 @@ class Check extends StatefulWidget {
         likes: this.likes,
         comments: this.comments,
         likeCount: getLikeCount(this.likes),
+        commentCount: getCommentCount(this.comments),
       );
 }
 
@@ -99,6 +117,7 @@ class _CheckState extends State<Check> {
   final String location;
   // final DateTime timestamp;
   int likeCount;
+  int commentCount;
   Map likes;
   Map comments;
   bool isLiked;
@@ -115,7 +134,8 @@ class _CheckState extends State<Check> {
       // this.timestamp,
       this.likes,
       this.comments,
-      this.likeCount});
+      this.likeCount,
+      this.commentCount});
 
   getCheckHeader() {
     return FutureBuilder(
@@ -277,7 +297,7 @@ class _CheckState extends State<Check> {
             size: 20.0,
           ),
           label: Text(
-            comments == null ? '0' : comments.length.toString(),
+            commentCount.toString(),
             style: TextStyle(
               color: Colors.grey[700],
             ),
