@@ -277,7 +277,7 @@ class _CheckState extends State<Check> {
             size: 20.0,
           ),
           label: Text(
-            comments != null ? comments.length.toString() : 0,
+            comments == null ? '0' : comments.length.toString(),
             style: TextStyle(
               color: Colors.grey[700],
             ),
