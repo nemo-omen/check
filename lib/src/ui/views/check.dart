@@ -98,6 +98,7 @@ class _CheckState extends State<Check> {
   int likeCount;
   Map likes = {};
   bool isLiked;
+  int commentsCount;
 
   _CheckState({
     this.checkId,
@@ -270,6 +271,54 @@ class _CheckState extends State<Check> {
     }));
   }
 
+  getCommentsCount() {
+    var commentsCountQuery = Firestore.instance
+        .collection('comments')
+        .document(checkId)
+        .collection('comments');
+    return FutureBuilder(
+        future: commentsCountQuery.getDocuments(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return circularProgress();
+          }
+          int _commentsCount = 0;
+          snapshot.data.documents.forEach((doc) {
+            _commentsCount += 1;
+          });
+          return FlatButton.icon(
+            icon: Icon(
+              FlutterIcons.message1_ant,
+              color: Colors.grey[700],
+              size: 20.0,
+            ),
+            label: Text(
+              _commentsCount != null ? _commentsCount.toString() : '0',
+              style: TextStyle(
+                color: Colors.grey[700],
+              ),
+            ),
+            onPressed: () {
+              showComments(
+                context,
+                postId: checkId,
+                ownerId: ownerId,
+              );
+            },
+          );
+        });
+  }
+
+  // getCommentsCount() async {
+  //   var commentsCountQuery = Firestore.instance
+  //       .collection('comments')
+  //       .document(checkId)
+  //       .collection('comments');
+  //   var querySnapshot = await commentsCountQuery.getDocuments();
+  //   int docCount = querySnapshot.documents.length;
+  //   commentsCount = docCount;
+  // }
+
   getCheckFooter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -290,27 +339,27 @@ class _CheckState extends State<Check> {
           ),
           onPressed: handleLikeCheck,
         ),
-        FlatButton.icon(
-          icon: Icon(
-            FlutterIcons.message1_ant,
-            color: Colors.grey[700],
-            size: 20.0,
-          ),
-          label: Text(
-            '0',
-            // commentCount.toString(),
-            style: TextStyle(
-              color: Colors.grey[700],
-            ),
-          ),
-          onPressed: () {
-            showComments(
-              context,
-              postId: checkId,
-              ownerId: ownerId,
-            );
-          },
-        ),
+        getCommentsCount(),
+        // FlatButton.icon(
+        //   icon: Icon(
+        //     FlutterIcons.message1_ant,
+        //     color: Colors.grey[700],
+        //     size: 20.0,
+        //   ),
+        //   label: Text(
+        //     commentsCount != null ? commentsCount.toString() : '0',
+        //     style: TextStyle(
+        //       color: Colors.grey[700],
+        //     ),
+        //   ),
+        //   onPressed: () {
+        //     showComments(
+        //       context,
+        //       postId: checkId,
+        //       ownerId: ownerId,
+        //     );
+        //   },
+        // ),
         buildDeleteButton(),
       ],
     );

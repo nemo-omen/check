@@ -30,6 +30,8 @@ class CommentsState extends State<Comments> {
   final String postId;
   final String postOwnerId;
   final String postMediaUrl;
+  var now = new DateTime.now();
+  int commentsCount = 0;
 
   CommentsState({
     this.postId,
@@ -51,6 +53,7 @@ class CommentsState extends State<Comments> {
           List<Comment> comments = [];
           snapshot.data.documents.forEach((doc) {
             comments.add(Comment.fromDocument(doc));
+            commentsCount = comments.length;
           });
           return ListView(
             children: comments,
@@ -62,7 +65,7 @@ class CommentsState extends State<Comments> {
     commentsRef.document(postId).collection("comments").add({
       "userName": currentUser.userName,
       "comment": commentController.text,
-      "timestamp": timestamp,
+      "timestamp": now,
       "avatarUrl": currentUser.photoUrl,
       "userId": currentUser.id,
     });
