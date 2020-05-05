@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           // include each page here for PageView
           Timeline(),
-          Profile(profileId: currentUser?.id),
+          Profile(profileId: currentUser?.id, isMainProfile: true),
           Messages(),
           Search(),
           // Settings(),

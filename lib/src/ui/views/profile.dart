@@ -11,7 +11,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 
 class Profile extends StatefulWidget {
   final String profileId;
-  Profile({this.profileId});
+  bool isMainProfile;
+  Profile({this.profileId, this.isMainProfile});
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -281,7 +282,8 @@ class _ProfileState extends State<Profile> {
       appBar: header(
         context,
         titleText: 'Profile',
-        removeBackButton: true,
+        removeBackButton:
+            widget.isMainProfile != null ? widget.isMainProfile : false,
       ),
       body: ListView(
         children: <Widget>[
