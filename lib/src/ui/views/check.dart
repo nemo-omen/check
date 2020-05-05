@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/check_view.dart';
 import 'package:check/src/ui/views/comments.dart';
 import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/widgets/progress.dart';
@@ -124,10 +125,19 @@ class _CheckState extends State<Check> {
         User user = User.fromDocument(snapshot.data);
         return ListTile(
           isThreeLine: true,
-          leading: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(user.photoUrl),
-            backgroundColor: Colors.grey,
-            radius: 20.0,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Profile(profileId: user.id)));
+            },
+            child: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(user.photoUrl),
+              backgroundColor: Colors.grey,
+              radius: 20.0,
+            ),
           ),
           title: GestureDetector(
             child: Text(
@@ -138,7 +148,7 @@ class _CheckState extends State<Check> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          Profile(profileId: user.id)));
+                          CheckView(userId: user.id, postId: checkId)));
             },
           ),
           subtitle: Column(

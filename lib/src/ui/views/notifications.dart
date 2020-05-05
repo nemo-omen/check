@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/ui/views/check_view.dart';
 import 'package:check/src/ui/views/home.dart';
+import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -101,10 +102,19 @@ class FeedItem extends StatelessWidget {
         },
         child: ListTile(
           dense: false,
-          leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(userProfileImg),
-              backgroundColor: Colors.grey,
-              radius: 20.0),
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Profile(profileId: userId)));
+            },
+            child: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(userProfileImg),
+                backgroundColor: Colors.grey,
+                radius: 20.0),
+          ),
           title: Container(
             child: RichText(
               overflow: TextOverflow.ellipsis,
