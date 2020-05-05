@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/comments.dart';
 import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
@@ -9,6 +10,7 @@ import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'home.dart';
 
 class Check extends StatefulWidget {
@@ -20,26 +22,23 @@ class Check extends StatefulWidget {
   final String status;
   final String message;
   final String location;
-  // final DateTime timestamp;
+  final Timestamp timestamp;
   dynamic likes = {};
-  dynamic comments = {};
   int likeCount;
-  int commentCount;
 
-  Check(
-      {this.checkId,
-      this.ownerId,
-      this.displayName,
-      this.userName,
-      this.mediaUrl,
-      this.status,
-      this.message,
-      this.location,
-      // this.timestamp,
-      this.likes,
-      this.comments,
-      this.likeCount,
-      this.commentCount});
+  Check({
+    this.checkId,
+    this.ownerId,
+    this.displayName,
+    this.userName,
+    this.mediaUrl,
+    this.status,
+    this.message,
+    this.location,
+    this.timestamp,
+    this.likes,
+    this.likeCount,
+  });
 
   factory Check.fromDocument(DocumentSnapshot doc) {
     return Check(
@@ -47,13 +46,12 @@ class Check extends StatefulWidget {
       ownerId: doc['ownerId'],
       status: doc['status'],
       message: doc['message'],
-      // timestamp: doc['timestamp'],
+      timestamp: doc['timestamp'],
       displayName: doc['displayName'],
       userName: doc['userName'],
       mediaUrl: doc['mediaUrl'],
       location: doc['location'],
       likes: doc['likes'],
-      comments: doc['comments'],
     );
   }
 
@@ -72,21 +70,6 @@ class Check extends StatefulWidget {
     return count;
   }
 
-  int getCommentCount(comments) {
-    // if no likes, return 0
-    if (comments == null) {
-      return 0;
-    }
-    int count = 0;
-    // if the key is set to true, add a like
-    comments.values.forEach((val) {
-      if (val == true) {
-        count += 1;
-      }
-    });
-    return count;
-  }
-
   @override
   _CheckState createState() => _CheckState(
         checkId: this.checkId,
@@ -97,11 +80,9 @@ class Check extends StatefulWidget {
         status: this.status,
         message: this.message,
         location: this.location,
-        // timestamp: this.timestamp,
+        timestamp: this.timestamp,
         likes: this.likes,
-        comments: this.comments,
         likeCount: getLikeCount(this.likes),
-        commentCount: getCommentCount(this.comments),
       );
 }
 
@@ -115,27 +96,24 @@ class _CheckState extends State<Check> {
   final String status;
   final String message;
   final String location;
-  // final DateTime timestamp;
+  final Timestamp timestamp;
   int likeCount;
-  int commentCount;
   Map likes = {};
-  Map comments = {};
   bool isLiked;
 
-  _CheckState(
-      {this.checkId,
-      this.ownerId,
-      this.displayName,
-      this.userName,
-      this.mediaUrl,
-      this.status,
-      this.message,
-      this.location,
-      // this.timestamp,
-      this.likes,
-      this.comments,
-      this.likeCount,
-      this.commentCount});
+  _CheckState({
+    this.checkId,
+    this.ownerId,
+    this.displayName,
+    this.userName,
+    this.mediaUrl,
+    this.status,
+    this.message,
+    this.location,
+    this.timestamp,
+    this.likes,
+    this.likeCount,
+  });
 
   getCheckHeader() {
     return FutureBuilder(
@@ -146,7 +124,7 @@ class _CheckState extends State<Check> {
         }
         User user = User.fromDocument(snapshot.data);
         return ListTile(
-          // isThreeLine: true,
+          isThreeLine: true,
           leading: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(user.photoUrl),
             backgroundColor: Colors.grey,
@@ -164,22 +142,37 @@ class _CheckState extends State<Check> {
                           Profile(profileId: user.id)));
             },
           ),
-          subtitle: Row(
+          subtitle: Column(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(0.0),
-                child: Text('Feeling'),
+              Row(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(0.0),
+                    child: Text('Feeling'),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                    ),
+                    padding: EdgeInsets.all(0.0),
+                    child: StatusBadge(status: status),
+                  ),
+                ],
               ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: 5.0,
-                ),
-                padding: EdgeInsets.all(0.0),
-                child: StatusBadge(status: status),
-              ),
-              Container(
-                padding: EdgeInsets.all(0.0),
-                child: Text(location),
+              Row(
+                children: <Widget>[
+                  Container(
+                    child: Text('$location — '),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(0.0),
+                    child: Text(timestamp != null
+                        ? timeago.format(
+                            timestamp.toDate(),
+                          )
+                        : ''),
+                  ),
+                ],
               ),
             ],
           ),
@@ -270,6 +263,16 @@ class _CheckState extends State<Check> {
     }
   }
 
+  showComments(BuildContext context, {String ownerId, String postId}) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Comments(
+        postId: checkId,
+        postOwnerId: ownerId,
+        // currentUserId: currentUserId,
+      );
+    }));
+  }
+
   getCheckFooter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -297,13 +300,18 @@ class _CheckState extends State<Check> {
             size: 20.0,
           ),
           label: Text(
-            commentCount.toString(),
+            '0',
+            // commentCount.toString(),
             style: TextStyle(
               color: Colors.grey[700],
             ),
           ),
           onPressed: () {
-            print('Comment!');
+            showComments(
+              context,
+              postId: checkId,
+              ownerId: ownerId,
+            );
           },
         ),
         buildDeleteButton(),

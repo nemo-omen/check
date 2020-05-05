@@ -20,13 +20,17 @@ import 'package:check/src/models/user.dart';
 // ! View imports
 
 // globals
-// final FirebaseAuth mAuth = FirebaseAuth.instance;
+// google sign/firestore users
 final GoogleSignIn googleSignIn = GoogleSignIn();
+GoogleSignInAccount fireStoreUser;
+
+// firestore database & storage references
 final usersRef = Firestore.instance.collection('users');
 final checksRef = Firestore.instance.collection('checks');
+final commentsRef = Firestore.instance.collection('comments');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
-// final Future<FirebaseUser> firebaseUser = mAuth.currentUser();
-GoogleSignInAccount fireStoreUser;
+
+// this is our current user ... use the user wisely :)
 User currentUser;
 
 // create a timestamp variable you can use whenever you need it

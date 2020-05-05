@@ -163,10 +163,14 @@ class _EditProfileState extends State<EditProfile> {
     Navigator.pop(context);
     File file = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 675, maxWidth: 960);
-    setState(() {
-      this.file = file;
-    });
-    showUploadModal();
+    if (file == null) {
+      return;
+    } else {
+      setState(() {
+        this.file = file;
+        showUploadModal();
+      });
+    }
   }
 
   handleChoosePhoto() async {
