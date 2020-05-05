@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:check/src/ui/views/check_view.dart';
 import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
@@ -85,11 +86,18 @@ class FeedItem extends StatelessWidget {
     );
   }
 
-  buildFeedItemWidget() {
+  showPost(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CheckView(postId: postId, userId: userId)));
+  }
+
+  buildFeedItemWidget(context) {
     if (type == 'comment') {
       return GestureDetector(
         onTap: () {
-          print('Go to post');
+          showPost(context);
         },
         child: ListTile(
           dense: false,
@@ -130,7 +138,7 @@ class FeedItem extends StatelessWidget {
     } else if (type == 'like') {
       return GestureDetector(
         onTap: () {
-          print('Go to post');
+          showPost(context);
         },
         child: ListTile(
           leading: CircleAvatar(
@@ -170,7 +178,7 @@ class FeedItem extends StatelessWidget {
     } else {
       return GestureDetector(
         onTap: () {
-          print('Go to post');
+          showPost(context);
         },
         child: ListTile(
           leading: CircleAvatar(
@@ -214,7 +222,7 @@ class FeedItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
-      child: buildFeedItemWidget(),
+      child: buildFeedItemWidget(context),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5.0),
