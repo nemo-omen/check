@@ -10,7 +10,7 @@ import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/views/profile.dart';
 import 'package:check/src/ui/views/create_account.dart';
 // import 'package:check/src/ui/views/friends.dart';
-import 'package:check/src/ui/views/messages.dart';
+import 'package:check/src/ui/views/notifications.dart';
 // import 'package:check/src/ui/views/settings.dart';
 import 'package:check/src/ui/views/search.dart';
 import 'package:check/src/ui/views/post_check.dart';
@@ -28,6 +28,7 @@ GoogleSignInAccount fireStoreUser;
 final usersRef = Firestore.instance.collection('users');
 final checksRef = Firestore.instance.collection('checks');
 final commentsRef = Firestore.instance.collection('comments');
+final activityFeedRef = Firestore.instance.collection('feed');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 // this is our current user ... use the user wisely :)
@@ -202,15 +203,15 @@ class _HomePageState extends State<HomePage> {
 // if GoogleSignIn returns authentication
   Scaffold isAuthPage() {
     return Scaffold(
-      backgroundColor: Colors.blue[200],
+      backgroundColor: Colors.blue[300],
       // Use header widget - found in ui/widgets/header/dart
       body: PageView(
         children: <Widget>[
           // include each page here for PageView
           Timeline(),
-          Profile(profileId: currentUser?.id, isMainProfile: true),
-          Messages(),
+          Notifications(),
           Search(),
+          Profile(profileId: currentUser?.id, isMainProfile: true),
           // Settings(),
         ],
         // set controller
@@ -235,33 +236,50 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0),
+              padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0.0),
+              child: Icon(
+                FlutterIcons.notification_ant,
+                size: 20.0,
+              ),
+            ),
+            title: Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 0.0, 30.0, 0.0),
+                child: Text('')),
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0),
+              child: Icon(
+                FlutterIcons.search1_ant,
+                size: 20.0,
+              ),
+            ),
+            title: Padding(
+              padding: const EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+              child: Text(''),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.fromLTRB(
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+              ),
               child: Icon(
                 FlutterIcons.user_ant,
                 size: 20.0,
               ),
             ),
             title: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 30.0, 0), child: Text('')),
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
-              child: Icon(
-                FlutterIcons.mail_ant,
-                size: 20.0,
-              ),
-            ),
-            title: Padding(
-                padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                padding: EdgeInsets.fromLTRB(
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                ),
                 child: Text('')),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              FlutterIcons.search1_ant,
-              size: 20.0,
-            ),
-            title: Text(''),
           ),
         ],
       ),

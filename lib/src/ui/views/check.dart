@@ -209,6 +209,7 @@ class _CheckState extends State<Check> {
           .collection('userPosts')
           .document(checkId)
           .updateData({'likes.$currentUserId': false});
+      removeLikeFromActivityFeed();
       setState(() {
         likeCount -= 1;
         isLiked = false;
@@ -220,12 +221,68 @@ class _CheckState extends State<Check> {
           .collection('userPosts')
           .document(checkId)
           .updateData({'likes.$currentUserId': true});
+      addLikeToActivityFeed();
       setState(() {
         likeCount += 1;
         isLiked = true;
         likes[currentUserId] = true;
       });
     }
+  }
+
+  addLikeToActivityFeed() {
+    bool isNotOwner = currentUser.id != ownerId;
+    if (isNotOwner) {
+      activityFeedRef
+          .document(ownerId)
+          .collection('feedItems')
+          .document(checkId)
+          .setData({
+        'type': 'like',
+        'userName': currentUser.userName,
+        'userId': currentUser.id,
+        'userProfileImg': currentUser.photoUrl,
+        'postId': checkId,
+        'timestamp': DateTime.now(),
+      });
+    }
+  }
+
+  removeLikeFromActivityFeed() {
+    bool isNotOwner = currentUser.id != ownerId;
+    if (isNotOwner) {
+      activityFeedRef
+          .document(ownerId)
+          .collection('feedItems')
+          .document(checkId)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
+      });
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+    Widget okButton = FlatButton(
+      child: Text('OK'),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text('I don\'t do anything yet!'),
+      content: Text('But soon, I\'ll have real functionality!'),
+      actions: <Widget>[okButton],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
   }
 
   buildDeleteButton() {
@@ -243,7 +300,7 @@ class _CheckState extends State<Check> {
           ),
         ),
         onPressed: () {
-          print('Delete!');
+          showAlertDialog(context);
         },
       );
     } else {
@@ -256,7 +313,7 @@ class _CheckState extends State<Check> {
           ),
         ),
         onPressed: () {
-          print('Add friend');
+          showAlertDialog(context);
         },
       );
     }
@@ -388,7 +445,7 @@ class _CheckState extends State<Check> {
     return Container(
       margin: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(5.0),
       ),
       child: Column(

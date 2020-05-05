@@ -20,50 +20,47 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  buildChecksList() {
-    return Container(
-      child: Text('Return checks here'),
-    );
-    // return FutureBuilder(
-    //     future: checksRef.getDocuments(),
-    //     builder: (context, snapshot) {
-    //       if (!snapshot.hasData) {
-    //         return circularProgress();
-    //       } else {
-    //         List allChecks = [];
-    //         List<Widget> checkViews = [];
-    //         snapshot.data.documents.forEach((doc) {
-    //           Check check = Check.fromDocument(doc);
-    //           allChecks.add(check);
-    //           allChecks.forEach((check) {
-    //             checkViews.add(
-    //               Check(
-    //                 checkId: check.checkId,
-    //                 ownerId: check.ownerId,
-    //                 displayName: check.displayName,
-    //                 userName: check.userName,
-    //                 mediaUrl: check.mediaUrl,
-    //                 status: check.status,
-    //                 message: check.message,
-    //                 location: check.location,
-    //                 timestamp: check.timestamp,
-    //                 likes: check.likes,
-    //                 comments: check.comments,
-    //               ),
-    //             );
-    //           });
-    //           return ListView(
-    //             children: checkViews,
-    //           );
-    //         });
-    //       }
-    //     });
-  }
+  // bool isLoading;
+  // List<Check> checks = [];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   buildChecksList();
+  // }
+
+  // buildChecksList() async {
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+
+  //   QuerySnapshot snapshot =
+  //       await checksRef.getDocuments().then((QuerySnapshot snapshot) {
+  //     snapshot.documents.forEach((DocumentSnapshot doc) {
+  //       // Check check = Check.fromDocument(doc.data);
+  //       // checks.add(check);
+  //       // print('Checks: $checks');
+  //       print(doc.data);
+  //     });
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   });
+  // }
+
+  // buildTimelineChecks() {
+  //   if (isLoading) {
+  //     return circularProgress();
+  //   }
+  //   return Column(
+  //     children: checks != null ? checks : Container(),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.blue[200],
       appBar: header(
         context,
         isAppTitle: true,
@@ -71,10 +68,13 @@ class _TimelineState extends State<Timeline> {
         removeBackButton: true,
       ),
       body: Center(
-        // build a ListView from all checks posted by friends
-        child: buildChecksList(),
-        // child: Text('Timeline'),
+        child: Text('Timeline'),
       ),
+      // body: ListView(
+      //   children: <Widget>[
+      //     buildTimelineChecks(),
+      //   ],
+      // ),
     );
   }
 }

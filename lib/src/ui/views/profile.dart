@@ -83,7 +83,7 @@ class _ProfileState extends State<Profile> {
   }
 
   // function for building different profile buttons depending on
-  buildButton({String text, Function function, color}) {
+  buildButton({String text, Function function, color, textColor}) {
     return FlatButton(
       color: color,
       shape: RoundedRectangleBorder(
@@ -93,7 +93,7 @@ class _ProfileState extends State<Profile> {
       child: Text(
         text,
         style: TextStyle(
-          color: Colors.white,
+          color: textColor,
           fontWeight: FontWeight.bold,
           fontSize: 18.0,
           letterSpacing: 1.0,
@@ -121,12 +121,14 @@ class _ProfileState extends State<Profile> {
           buildButton(
             text: 'Edit Profile',
             function: editProfile,
-            color: Theme.of(context).primaryColor.withOpacity(0.8),
+            color: Colors.blue[700],
+            textColor: Colors.white,
           ),
           buildButton(
             text: 'Log Out',
             function: logOut,
             color: Colors.red[300],
+            textColor: Colors.white,
           ),
         ],
       );
@@ -278,7 +280,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
+      backgroundColor: Colors.blue[200],
       appBar: header(
         context,
         titleText: 'Profile',
