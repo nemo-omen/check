@@ -236,7 +236,7 @@ class _EditProfileState extends State<EditProfile> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 20.0),
-                  height: 350,
+                  height: 300,
                   child: Image.file(
                     file,
                     fit: BoxFit.cover,
