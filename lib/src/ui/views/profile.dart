@@ -278,7 +278,11 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[100],
-      appBar: header(context, titleText: 'Profile'),
+      appBar: header(
+        context,
+        titleText: 'Profile',
+        removeBackButton: true,
+      ),
       body: ListView(
         children: <Widget>[
           buildProfileHeader(),

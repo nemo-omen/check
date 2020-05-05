@@ -1,35 +1,40 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:check/src/ui/widgets/progress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:check/src/ui/views/home.dart';
+import 'package:check/src/ui/widgets/header.dart';
+import 'package:check/src/ui/widgets/progress.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'package:check/src/ui/widgets/header.dart';
-import 'package:check/src/ui/views/home.dart';
-
 class Comments extends StatefulWidget {
-  final String postOwnerId;
   final String postId;
+  final String postOwnerId;
+  final String postMediaUrl;
 
-  Comments({this.postOwnerId, this.postId});
+  Comments({
+    this.postId,
+    this.postOwnerId,
+    this.postMediaUrl,
+  });
 
   @override
   CommentsState createState() => CommentsState(
-        postOwnerId: this.postOwnerId,
         postId: this.postId,
+        postOwnerId: this.postOwnerId,
+        postMediaUrl: this.postMediaUrl,
       );
 }
 
 class CommentsState extends State<Comments> {
-  TextEditingController _commentController = TextEditingController();
-  final String postOwnerId;
+  TextEditingController commentController = TextEditingController();
   final String postId;
-  final String currentUserId;
+  final String postOwnerId;
+  final String postMediaUrl;
 
   CommentsState({
-    this.postOwnerId,
     this.postId,
-    this.currentUserId,
+    this.postOwnerId,
+    this.postMediaUrl,
   });
 
   buildComments() {
@@ -37,16 +42,15 @@ class CommentsState extends State<Comments> {
         stream: commentsRef
             .document(postId)
             .collection('comments')
-            .orderBy('timeStamp', descending: true)
+            .orderBy("timestamp", descending: false)
             .snapshots(),
-        builder: (BuildContext context, snapshot) {
+        builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return circularProgress();
           }
           List<Comment> comments = [];
           snapshot.data.documents.forEach((doc) {
             comments.add(Comment.fromDocument(doc));
-            print('Comments $comments');
           });
           return ListView(
             children: comments,
@@ -54,53 +58,34 @@ class CommentsState extends State<Comments> {
         });
   }
 
-  submitComment(currentUser, comment) {
-    commentsRef.document(postId).collection('comments').add({
-      'userName': currentUser.userName,
-      'displayName': currentUser.displayName,
-      'avatarUrl': currentUser.photoUrl,
-      'userId': currentUser.id,
-      'timestamp': timestamp,
-      'comment': comment,
+  addComment() {
+    commentsRef.document(postId).collection("comments").add({
+      "userName": currentUser.userName,
+      "comment": commentController.text,
+      "timestamp": timestamp,
+      "avatarUrl": currentUser.photoUrl,
+      "userId": currentUser.id,
     });
-    _commentController.clear();
+    commentController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(
-        context,
-        titleText: 'Comments',
-        removeBackButton: false,
-      ),
+      appBar: header(context, titleText: "Comments", removeBackButton: false),
       body: Column(
         children: <Widget>[
-          Expanded(
-            child: buildComments(),
-          ),
+          Expanded(child: buildComments()),
           Divider(),
           ListTile(
             title: TextFormField(
-              controller: _commentController,
-              decoration: InputDecoration(
-                labelText: 'Write a comment...',
-              ),
+              controller: commentController,
+              decoration: InputDecoration(labelText: "Write a comment..."),
             ),
             trailing: OutlineButton(
+              onPressed: addComment,
               borderSide: BorderSide.none,
-              color: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Text(
-                'Post',
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              onPressed: () =>
-                  submitComment(currentUser, _commentController.text),
+              child: Text("Post"),
             ),
           ),
         ],
@@ -110,29 +95,28 @@ class CommentsState extends State<Comments> {
 }
 
 class Comment extends StatelessWidget {
-  final String comment;
   final String userName;
-  final String displayName;
-  final String avatarUrl;
   final String userId;
+  final String avatarUrl;
+  final String comment;
   final Timestamp timestamp;
 
-  Comment(
-      {this.comment,
-      this.userName,
-      this.displayName,
-      this.avatarUrl,
-      this.userId,
-      this.timestamp});
+  Comment({
+    this.userName,
+    this.userId,
+    this.avatarUrl,
+    this.comment,
+    this.timestamp,
+  });
 
-  factory Comment.fromDocument(DocumentSnapshot document) {
+  factory Comment.fromDocument(DocumentSnapshot doc) {
     return Comment(
-        comment: document['comment'],
-        userName: document['userName'],
-        displayName: document['displayName'],
-        avatarUrl: document['avatarUrl'],
-        userId: document['userId'],
-        timestamp: document['timestamp']);
+      userName: doc['userName'],
+      userId: doc['userId'],
+      comment: doc['comment'],
+      timestamp: doc['timestamp'],
+      avatarUrl: doc['avatarUrl'],
+    );
   }
 
   @override
@@ -143,14 +127,9 @@ class Comment extends StatelessWidget {
           title: Text(comment),
           leading: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(avatarUrl),
-            backgroundColor: Colors.grey,
-            radius: 30.0,
           ),
           subtitle: Text(
-            timeago.format(
-              timestamp.toDate(),
-            ),
-          ),
+              '${currentUser.userName} — ${timeago.format(timestamp.toDate())}'),
         ),
         Divider(),
       ],

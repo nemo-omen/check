@@ -14,6 +14,17 @@ header(
     automaticallyImplyLeading: removeBackButton == true ? false : true,
     backgroundColor: Colors.white,
     centerTitle: true,
+    leading: removeBackButton == true
+        ? null
+        : IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+            ),
+            color: Theme.of(context).primaryColor,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(10),

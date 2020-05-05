@@ -1,9 +1,7 @@
-import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/comments.dart';
 import 'package:check/src/ui/views/profile.dart';
-import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 import 'package:check/src/ui/widgets/status_badge.dart';
 import 'package:check/src/ui/widgets/user_avatar.dart';
@@ -266,9 +264,8 @@ class _CheckState extends State<Check> {
   showComments(BuildContext context, {String ownerId, String postId}) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Comments(
-        postId: checkId,
+        postId: postId,
         postOwnerId: ownerId,
-        // currentUserId: currentUserId,
       );
     }));
   }
