@@ -1,16 +1,9 @@
-# check
+# Check
 
-A new Flutter project.
+## An app used to check in with friends and family.
 
-## Getting Started
+This is a learning project. A good deal of the code was created alongside Reed Barger's Udemy course. Sometimes the code was used as a starting point, sometimes the code was copied exactly when I got stuck and couldn't find a way out of the problem.
 
-This project is a starting point for a Flutter application.
+This project will be changed completely as I learn more about the Flutter framework and am able to build my own solutions.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+For now, thanks goes to [Reed Barger's Course on Udemy](https://www.udemy.com/course/build-a-social-network-with-flutter-and-firebase).
