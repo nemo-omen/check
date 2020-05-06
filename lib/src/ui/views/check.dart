@@ -314,18 +314,7 @@ class _CheckState extends State<Check> {
         },
       );
     } else {
-      return FlatButton.icon(
-        icon: Icon(FlutterIcons.plus_ant),
-        label: Text(
-          'Add Friend',
-          style: TextStyle(
-            color: Colors.grey[700],
-          ),
-        ),
-        onPressed: () {
-          showAlertDialog(context);
-        },
-      );
+      return Text('');
     }
   }
 
@@ -375,16 +364,6 @@ class _CheckState extends State<Check> {
           );
         });
   }
-
-  // getCommentsCount() async {
-  //   var commentsCountQuery = Firestore.instance
-  //       .collection('comments')
-  //       .document(checkId)
-  //       .collection('comments');
-  //   var querySnapshot = await commentsCountQuery.getDocuments();
-  //   int docCount = querySnapshot.documents.length;
-  //   commentsCount = docCount;
-  // }
 
   getCheckFooter() {
     return Row(

@@ -18,15 +18,53 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool isFollowing = false;
   final String currentUserId = currentUser?.id;
   bool isLoading = false;
   int checksCount = 0;
+  int followerCount = 0;
+  int followingCount = 0;
   List<Check> checks = [];
 
   @override
   void initState() {
     super.initState();
     getProfileChecks();
+    getFollowers();
+    getFollowing();
+    checkIfFollowing();
+  }
+
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUser.id)
+        .get();
+    setState(() {
+      isFollowing = doc.exists;
+    });
+  }
+
+  getFollowers() async {
+    QuerySnapshot snapshot = await followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .getDocuments();
+    setState(() {
+      followerCount = snapshot.documents.length;
+    });
+  }
+
+  getFollowing() async {
+    QuerySnapshot snapshot = await followingRef
+        .document(widget.profileId)
+        .collection('userFollowing')
+        .getDocuments();
+
+    setState(() {
+      followingCount = snapshot.documents.length;
+    });
   }
 
   getProfileChecks() async {
@@ -132,7 +170,100 @@ class _ProfileState extends State<Profile> {
           ),
         ],
       );
+    } else if (isFollowing) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          buildButton(
+            text: 'Unfollow User',
+            function: unFollowUser,
+            color: Colors.blue[700],
+            textColor: Colors.white,
+          ),
+        ],
+      );
+    } else if (!isFollowing) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          buildButton(
+            text: 'Follow User',
+            function: followUser,
+            color: Colors.red[300],
+            textColor: Colors.white,
+          ),
+        ],
+      );
     }
+  }
+
+  followUser() {
+    setState(() {
+      isFollowing = true;
+    });
+    // set current user as a follower in profile user's followers collection
+    followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUserId)
+        .setData({});
+    // set profile user as entry in currentUser's following collection
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(widget.profileId)
+        .setData({});
+    // send notification of follow action by adding document to activity feed collection
+    activityFeedRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .setData({
+      'type': 'follow',
+      'ownerId': widget.profileId,
+      'userName': currentUser.userName,
+      'userProfileImg': currentUser.photoUrl,
+      'timestamp': DateTime.now(),
+    });
+  }
+
+  unFollowUser() {
+    setState(() {
+      isFollowing = false;
+    });
+    // remove current user as a follower in profile user's followers collection
+    followersRef
+        .document(widget.profileId)
+        .collection('userFollowers')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    // remove profile user as entry in currentUser's following collection
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(widget.profileId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    // delete document from activity feed collection
+    activityFeedRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 
   buildProfileHeader() {
@@ -231,34 +362,10 @@ class _ProfileState extends State<Profile> {
                       child: buildCountColumn('Checks', checks.length),
                     ),
                     Container(
-                      child: buildCountColumn('Friends', user.friends.length),
+                      child: buildCountColumn('Following', followingCount),
                     ),
                     Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                            padding: EdgeInsets.all(2.0),
-                            icon: Icon(
-                              FlutterIcons.comment_account_outline_mco,
-                              color: Colors.black,
-                              size: 24.0,
-                            ),
-                            onPressed: () {
-                              print('Message');
-                            },
-                          ),
-                          Text(
-                            'Message',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.grey,
-                              height: 0.6,
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: buildCountColumn('Followers', followerCount),
                     ),
                   ],
                 ),

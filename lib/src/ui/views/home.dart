@@ -29,6 +29,8 @@ final usersRef = Firestore.instance.collection('users');
 final checksRef = Firestore.instance.collection('checks');
 final commentsRef = Firestore.instance.collection('comments');
 final activityFeedRef = Firestore.instance.collection('feed');
+final followersRef = Firestore.instance.collection('followers');
+final followingRef = Firestore.instance.collection('following');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 // this is our current user ... use the user wisely :)

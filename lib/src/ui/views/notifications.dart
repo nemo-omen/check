@@ -94,6 +94,13 @@ class FeedItem extends StatelessWidget {
             builder: (context) => CheckView(postId: postId, userId: userId)));
   }
 
+  // showProfile(context) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (BuildContext context) => Profile(profileId: userId)));
+  // }
+
   buildFeedItemWidget(context) {
     if (type == 'comment') {
       return GestureDetector(
@@ -186,43 +193,47 @@ class FeedItem extends StatelessWidget {
         ),
       );
     } else {
-      return GestureDetector(
-        onTap: () {
-          showPost(context);
-        },
-        child: ListTile(
-          leading: CircleAvatar(
+      return ListTile(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Profile(profileId: userId)));
+          },
+          child: CircleAvatar(
               backgroundImage: CachedNetworkImageProvider(userProfileImg),
               backgroundColor: Colors.grey,
               radius: 20.0),
-          title: Container(
-            child: RichText(
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.black,
-                ),
-                children: [
-                  TextSpan(
-                    text: userName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' followed you',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
+        ),
+        title: Container(
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.black,
               ),
+              children: [
+                TextSpan(
+                  text: userName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextSpan(
+                  text: ' followed you',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ),
-          subtitle: Container(
-            child: Text(timeago.format(timestamp.toDate())),
-          ),
+        ),
+        subtitle: Container(
+          child: Text(timeago.format(timestamp.toDate())),
         ),
       );
     }
