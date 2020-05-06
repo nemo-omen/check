@@ -71,7 +71,7 @@ exports.onCreatePost = functions.firestore
   .onCreate(async (snapshot, context) => {
     const postCreated = snapshot.data();
     const userId = context.params.userId;
-    const postId = context.params.postId;
+    const postId = context.params.checkId;
 
     // 1) Get all the followers of the user who made the post
     const userFollowersRef = admin
@@ -100,7 +100,7 @@ exports.onUpdatePost = functions.firestore
   .onUpdate(async (change, context) => {
     const postUpdated = change.after.data();
     const userId = context.params.userId;
-    const postId = context.params.postId;
+    const postId = context.params.checkId;
 
     // 1) Get all the followers of the user who made the post
     const userFollowersRef = admin
@@ -133,7 +133,7 @@ exports.onDeletePost = functions.firestore
   .document("/checks/{userId}/userPosts/{checkId}")
   .onDelete(async (snapshot, context) => {
     const userId = context.params.userId;
-    const postId = context.params.postId;
+    const postId = context.params.checkId;
 
     // 1) Get all the followers of the user who made the post
     const userFollowersRef = admin
