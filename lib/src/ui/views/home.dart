@@ -31,6 +31,7 @@ final commentsRef = Firestore.instance.collection('comments');
 final activityFeedRef = Firestore.instance.collection('feed');
 final followersRef = Firestore.instance.collection('followers');
 final followingRef = Firestore.instance.collection('following');
+final timelineRef = Firestore.instance.collection('timeline');
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 
 // this is our current user ... use the user wisely :)
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       handleSignIn(account);
     }, onError: (err) {
-      print('Error signing in: $err');
+      // print('Error signing in: $err');
     });
     // Reauthenticate user on app open
     googleSignIn
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         .then((account) {
       handleSignIn(account);
     }).catchError((err) {
-      print('Error signing in: $err');
+      // print('Error signing in: $err');
     });
   }
 
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
 
   handleSignIn(GoogleSignInAccount account) {
     if (account != null) {
-      print(account);
+      // print(account);
       // if login is successful, call createFirestoreUser()
       createFirestoreUser();
       setState(() {
@@ -210,7 +211,7 @@ class _HomePageState extends State<HomePage> {
       body: PageView(
         children: <Widget>[
           // include each page here for PageView
-          Timeline(),
+          Timeline(currentUser: currentUser),
           Notifications(),
           Search(),
           Profile(profileId: currentUser?.id, isMainProfile: true),

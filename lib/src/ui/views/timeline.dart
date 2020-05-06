@@ -1,80 +1,59 @@
-// import 'package:check/src/models/check.dart';
-// import 'package:check/src/models/dummychecks.dart';
-import 'package:check/src/ui/views/check.dart';
-import 'package:check/src/ui/widgets/header.dart';
-import 'package:check/src/ui/widgets/progress.dart';
-import 'package:check/src/ui/widgets/status_badge.dart';
-import 'package:check/src/ui/widgets/user_avatar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'home.dart';
+import 'package:check/src/models/user.dart';
+import 'package:check/src/ui/views/home.dart';
+import 'package:check/src/ui/widgets/header.dart';
+import 'package:check/src/ui/views/Check.dart';
+import 'package:check/src/ui/widgets/progress.dart';
 
-Future<QuerySnapshot> checksFuture = checksRef.getDocuments();
+final usersRef = Firestore.instance.collection('users');
 
 class Timeline extends StatefulWidget {
-  // final checks = dummyChecks;
+  final User currentUser;
+
+  Timeline({this.currentUser});
 
   @override
   _TimelineState createState() => _TimelineState();
 }
 
 class _TimelineState extends State<Timeline> {
-  // bool isLoading;
-  // List<Check> checks = [];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   buildChecksList();
-  // }
-
-  // buildChecksList() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   QuerySnapshot snapshot =
-  //       await checksRef.getDocuments().then((QuerySnapshot snapshot) {
-  //     snapshot.documents.forEach((DocumentSnapshot doc) {
-  //       // Check check = Check.fromDocument(doc.data);
-  //       // checks.add(check);
-  //       // print('Checks: $checks');
-  //       print(doc.data);
-  //     });
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   });
-  // }
-
-  // buildTimelineChecks() {
-  //   if (isLoading) {
-  //     return circularProgress();
-  //   }
-  //   return Column(
-  //     children: checks != null ? checks : Container(),
-  //   );
-  // }
+  List<Check> checks;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    getTimeline();
+  }
+
+  getTimeline() async {
+    QuerySnapshot snapshot = await timelineRef
+        .document(widget.currentUser.id)
+        .collection('timelineposts')
+        .orderBy('timestamp', descending: true)
+        .getDocuments();
+    List<Check> checks =
+        snapshot.documents.map((doc) => Check.fromDocument(doc)).toList();
+    setState(() {
+      this.checks = checks;
+    });
+  }
+
+  buildTimeline() {
+    if (checks == null) {
+      return circularProgress();
+    } else if (checks.isEmpty) {
+      return Text("No checks");
+    } else {
+      return ListView(children: checks);
+    }
+  }
+
+  @override
+  Widget build(context) {
     return Scaffold(
-      backgroundColor: Colors.blue[200],
-      appBar: header(
-        context,
-        isAppTitle: true,
-        titleText: 'Check',
-        removeBackButton: true,
-      ),
-      body: Center(
-        child: Text('Timeline'),
-      ),
-      // body: ListView(
-      //   children: <Widget>[
-      //     buildTimelineChecks(),
-      //   ],
-      // ),
-    );
+        appBar: header(context, isAppTitle: true, removeBackButton: true),
+        body: RefreshIndicator(
+            onRefresh: () => getTimeline(), child: buildTimeline()));
   }
 }

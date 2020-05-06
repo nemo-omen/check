@@ -406,7 +406,7 @@ class _EditProfileState extends State<EditProfile> {
                                   ),
                                   color: Colors.red[400],
                                   onPressed: () {
-                                    print('Cancel update');
+                                    // print('Cancel update');
                                     Navigator.pop(context);
                                   },
                                 ),

@@ -68,8 +68,8 @@ class _PostCheckState extends State<PostCheck> {
 
   submit(value) {
     checkMessage = value;
-    print(
-        '${_currentUser.displayName}: Feeling $selectedStatus, Message: $checkMessage');
+    // print(
+    //     '${_currentUser.displayName}: Feeling $selectedStatus, Message: $checkMessage');
     _checkController.clear();
     createFirestoreCheck();
     setState(() {
