@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:check/src/models/user.dart';
 import 'package:check/src/ui/views/home.dart';
 import 'package:check/src/ui/widgets/header.dart';
-import 'package:check/src/ui/views/Check.dart';
+import 'package:check/src/ui/views/check.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 
 // final usersRef = Firestore.instance.collection('users');
