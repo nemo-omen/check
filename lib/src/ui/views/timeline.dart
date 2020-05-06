@@ -6,7 +6,7 @@ import 'package:check/src/ui/widgets/header.dart';
 import 'package:check/src/ui/views/Check.dart';
 import 'package:check/src/ui/widgets/progress.dart';
 
-final usersRef = Firestore.instance.collection('users');
+// final usersRef = Firestore.instance.collection('users');
 
 class Timeline extends StatefulWidget {
   final User currentUser;
@@ -18,7 +18,7 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  List<Check> checks;
+  List<Check> checks = [];
 
   @override
   void initState() {
@@ -29,11 +29,13 @@ class _TimelineState extends State<Timeline> {
   getTimeline() async {
     QuerySnapshot snapshot = await timelineRef
         .document(widget.currentUser.id)
-        .collection('timelineposts')
+        .collection('timelinePosts')
         .orderBy('timestamp', descending: true)
         .getDocuments();
-    List<Check> checks =
-        snapshot.documents.map((doc) => Check.fromDocument(doc)).toList();
+    snapshot.documents.forEach((doc) {
+      print(doc);
+      checks.add(Check.fromDocument(doc));
+    });
     setState(() {
       this.checks = checks;
     });
